@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Painel de monitoramento — Defesa Civil de Guarapuava</title>
+  <meta name="robots" content="noindex">
+  <meta name="theme-color" content="#120B54">
+  <link rel="icon" href="assets/img/favicon-32.png" sizes="32x32">
+  <link rel="preload" href="assets/fonts/saira-var.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="assets/css/site.css">
+  <style>
+    html, body { height: 100%; }
+    body { background: #0B0838; color: #fff; overflow: hidden; }
+    #ceu { position: fixed; inset: 0; width: 100%; height: 100%; z-index: -1; }
+    .painel { height: 100dvh; display: grid; gap: 14px; padding: 14px; grid-template-rows: auto auto minmax(0, 1fr) minmax(0, .9fr) auto; }
+    .p-topo { display: flex; align-items: center; gap: 18px; padding: 10px 16px; border-radius: 22px; }
+    .p-topo img { width: 48px; height: 48px; border-radius: 10px; }
+    .p-topo h1 { font-size: 1.35rem; font-weight: 800; font-stretch: 87.5%; }
+    .p-topo small { display: block; opacity: .85; font-size: .9rem; }
+    .relogio { margin-left: auto; text-align: right; font-family: var(--fonte-display); }
+    .relogio b { display: block; font-size: 2.2rem; font-weight: 600; line-height: 1; font-variant-numeric: tabular-nums; }
+    .relogio span { font-size: .95rem; opacity: .9; }
+    .p-botoes { display: flex; gap: 8px; }
+    .p-botoes .btn { min-height: 40px; padding: 6px 14px; font-size: .9rem; }
+    .p-botoes .btn[aria-pressed="true"] { background: var(--grad-whats); }
+    .p-alerta { border-radius: 24px; padding: clamp(10px, 1.8vh, 18px) 24px; display: grid; grid-template-columns: auto 1fr auto; gap: 22px; align-items: center; color: var(--alerta-texto, #fff); background: var(--alerta-grad, rgba(255,255,255,.12)); border: 1px solid rgba(255,255,255,.4); box-shadow: inset 0 1px 0 rgba(255,255,255,.5), 0 20px 50px -20px rgba(0,0,0,.5); position: relative; overflow: hidden; }
+    .p-alerta::before { content: ''; position: absolute; inset: 0; background: linear-gradient(115deg, rgba(255,255,255,.35), transparent 40%); pointer-events: none; }
+    .p-alerta .nivel { font-weight: 800; font-size: 1rem; padding: 6px 14px; border-radius: 999px; background: rgba(255,255,255,.3); white-space: nowrap; }
+    .p-alerta h2 { font-size: clamp(1.6rem, min(3.4vw, 6vh), 3.4rem); font-weight: 900; font-stretch: 75%; text-transform: uppercase; line-height: .95; }
+    .p-alerta p { margin: 4px 0 0; font-weight: 600; max-width: none; }
+    .p-alerta .vig { text-align: right; font-family: var(--fonte-display); font-weight: 700; font-stretch: 87.5%; font-size: 1.2rem; line-height: 1.2; }
+    .p-alerta.ok { --alerta-grad: linear-gradient(135deg, rgba(255,255,255,.16), rgba(255,255,255,.06)); }
+    .p-alerta.ok h2 { font-size: 1.8rem; text-transform: none; font-stretch: 87.5%; }
+    .p-meio { display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1.6fr); gap: 14px; min-height: 0; }
+    .cartao { border-radius: 24px; padding: clamp(10px, 1.8vh, 18px) 22px; min-height: 0; display: grid; align-content: start; }
+    .cartao h3 { font-size: 1.05rem; font-weight: 700; font-stretch: 100%; opacity: .92; margin-bottom: 6px; }
+    .agora-p { grid-template-columns: auto 1fr; gap: 6px 18px; align-content: center; }
+    .agora-p { overflow: hidden; }
+    .agora-p img { width: clamp(60px, 11vh, 140px); grid-row: span 2; }
+    .agora-p .temp { font-size: clamp(3.4rem, min(9vw, 12vh), 8.5rem); }
+    .agora-p .cond { margin: 0; font-size: clamp(1.1rem, min(2vw, 3.2vh), 2rem); }
+    .agora-p dl { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px 14px; margin: 10px 0 0; }
+    .agora-p dt { font-size: .85rem; opacity: .85; }
+    .agora-p dd { margin: 0; font-family: var(--fonte-display); font-weight: 600; font-size: clamp(1rem, 2.6vh, 1.4rem); white-space: nowrap; }
+    .agora-p dl { margin-top: clamp(4px, 1vh, 10px) !important; }
+    #p-grafico svg { width: 100%; height: 100%; min-height: 140px; }
+    #p-grafico { grid-template-rows: auto 1fr; }
+    #p-grafico .eixo text { fill: rgba(255,255,255,.85); font-size: 12px; }
+    #p-grafico .grade line { stroke: rgba(255,255,255,.18); }
+    #p-grafico .temp-h { fill: #fff; font-family: var(--fonte-display); font-weight: 700; font-size: 14px; }
+    .p-baixo { display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(0, .9fr); gap: 14px; min-height: 0; }
+    .p-dias { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; }
+    .p-dias li { text-align: center; display: grid; justify-items: center; gap: 2px; padding: 8px 4px; border-radius: 16px; background: rgba(255,255,255,.08); }
+    .p-dias b { font-family: var(--fonte-display); font-weight: 800; font-stretch: 87.5%; font-size: 1.15rem; }
+    .p-dias img { width: 54px; height: 54px; }
+    .p-dias .t { font-family: var(--fonte-display); font-weight: 700; font-size: 1.2rem; }
+    .p-dias .c { font-size: .85rem; font-weight: 800; color: #CFE2FF; }
+    .p-lado { display: grid; grid-template-columns: 1fr auto; gap: 14px; align-items: center; }
+    .p-lado ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; font-size: .95rem; }
+    .p-lado .qr { background: #fff; padding: 8px; border-radius: 14px; width: 120px; }
+    .p-lado .qr small { display: block; text-align: center; color: #0B6B33; font-weight: 800; font-size: .7rem; }
+    .p-rodape { display: flex; gap: 18px; justify-content: space-between; font-size: .85rem; opacity: .85; padding: 0 6px; flex-wrap: wrap; }
+    .estado-fontes { display: flex; gap: 16px; list-style: none; padding: 0; margin: 0; }
+    .estado-fontes li { display: flex; gap: 6px; align-items: center; }
+    .estado-fontes .ok, .estado-fontes .falha { width: 9px; height: 9px; border-radius: 50%; }
+    .estado-fontes .ok { background: #3BE08A; } .estado-fontes .falha { background: #FF8A3D; }
+    @media (max-width: 1000px), (max-height: 640px) {
+      body { overflow: auto; } .painel { height: auto; grid-template-rows: none; }
+      .p-meio, .p-baixo { grid-template-columns: 1fr; } .p-dias { grid-template-columns: repeat(3, 1fr); }
+    }
+  </style>
+</head>
+<body>
+  <canvas id="ceu" aria-hidden="true"></canvas>
+  <div class="painel">
+    <header class="p-topo vidro">
+      <img src="assets/img/defesa-civil-guarapuava.png" alt="">
+      <div><h1>Painel de monitoramento</h1><small>Defesa Civil de Guarapuava · tempo e alertas</small></div>
+      <div class="relogio"><b id="relogio">--:--:--</b><span id="data-hoje"></span></div>
+      <div class="p-botoes">
+        <button class="btn btn-vidro" type="button" id="btn-som" aria-pressed="false">Ativar aviso sonoro</button>
+        <button class="btn btn-vidro" type="button" id="btn-tela">Tela cheia</button>
+        <a class="btn btn-vidro" href="./">Site</a>
+      </div>
+    </header>
+    <section class="p-alerta ok" id="p-alerta" aria-live="assertive"></section>
+    <div class="p-meio">
+      <section class="cartao vidro agora-p" id="p-agora" aria-label="Tempo agora"></section>
+      <section class="cartao vidro" id="p-grafico" aria-label="Próximas 24 horas">
+        <h3>Próximas 24 horas · chuva prevista por hora (mm), com a temperatura no topo</h3>
+        <svg id="p-svg" role="img" aria-label="Chuva e temperatura nas próximas 24 horas"></svg>
+      </section>
+    </div>
+    <div class="p-baixo">
+      <section class="cartao vidro" aria-label="Próximos dias"><h3>Próximos dias</h3><ol class="p-dias" id="p-dias"></ol></section>
+      <section class="cartao vidro p-lado" aria-label="Avisos e canal">
+        <div><h3>Avisos do INMET para Guarapuava</h3><ul id="p-avisos"></ul></div>
+        <div class="qr"><img src="assets/img/qr-canal-whatsapp.svg" alt="QR code do canal no WhatsApp"><small>Canal da Defesa Civil</small></div>
+      </section>
+    </div>
+    <footer class="p-rodape">
+      <ul class="estado-fontes" id="p-fontes"></ul>
+      <span id="p-atualizacao"></span>
+    </footer>
+  </div>
+  <script type="module" src="assets/js/painel.js"></script>
+</body>
+</html>

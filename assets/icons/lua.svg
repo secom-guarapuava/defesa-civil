@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64"><defs>
+<radialGradient id="sol" cx="40%" cy="38%" r="70%"><stop offset="0" stop-color="#FFE680"/><stop offset="1" stop-color="#FFB21E"/></radialGradient>
+<linearGradient id="lua" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FFFFFF"/><stop offset="1" stop-color="#C9C6F2"/></linearGradient>
+<linearGradient id="nb" gradientUnits="userSpaceOnUse" x1="0" y1="18" x2="0" y2="52"><stop offset="0" stop-color="#FFFFFF"/><stop offset="1" stop-color="#D3DAEB"/></linearGradient>
+<linearGradient id="ng" gradientUnits="userSpaceOnUse" x1="0" y1="14" x2="0" y2="50"><stop offset="0" stop-color="#C3CBDD"/><stop offset="1" stop-color="#8E99B5"/></linearGradient>
+<linearGradient id="ne" gradientUnits="userSpaceOnUse" x1="0" y1="10" x2="0" y2="44"><stop offset="0" stop-color="#8C96B3"/><stop offset="1" stop-color="#4F5878"/></linearGradient>
+<linearGradient id="raio" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFE14D"/><stop offset="1" stop-color="#FFA90A"/></linearGradient>
+</defs><mask id="mlua"><rect width="64" height="64" fill="#fff"/><circle cx="40.5" cy="25.4" r="13.9" fill="#000"/></mask><circle cx="30" cy="33" r="17" fill="url(#lua)" stroke="#B3ADE6" stroke-width="1.6" mask="url(#mlua)"/><g fill="#FFFFFF"><circle cx="48" cy="40" r="1.6"/><circle cx="44" cy="50" r="1.1"/><circle cx="52" cy="28" r="1.2"/></g></svg>

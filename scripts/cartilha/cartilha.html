@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Chuva forte e tempestades: como se proteger — Defesa Civil de Guarapuava</title>
+<style>
+@font-face { font-family: 'Saira DC'; src: url(../../assets/fonts/saira-var.woff2') format('woff2'); font-weight: 100 900; font-stretch: 50% 125%; }
+@font-face { font-family: 'Atkinson DC'; src: url(../../assets/fonts/atkinson-next-var.woff2') format('woff2'); font-weight: 200 800; }
+@page { size: 148mm 210mm; margin: 0; }
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body { font-family: 'Atkinson DC', sans-serif; font-size: 10pt; line-height: 1.42; color: #16123D; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+.pag { width: 148mm; height: 210mm; position: relative; overflow: hidden; page-break-after: always; padding: 14mm 12mm 16mm; }
+.pag:last-child { page-break-after: auto; }
+h1, h2, h3 { font-family: 'Saira DC', sans-serif; margin: 0; line-height: 1.05; }
+h2 { font-size: 22pt; font-weight: 800; font-stretch: 85%; margin-bottom: 3mm; }
+h3 { font-size: 12.5pt; font-weight: 700; font-stretch: 92%; margin: 0 0 1.5mm; display: flex; align-items: center; gap: 2.5mm; }
+h3 img { width: 9mm; height: 9mm; }
+p { margin: 0 0 2.5mm; }
+ul { margin: 0; padding-left: 4.5mm; }
+li { margin-bottom: 1.2mm; }
+li::marker { color: #3B2FD0; }
+.lead { font-size: 11pt; color: #4A4770; margin-bottom: 5mm; }
+.rodape { position: absolute; left: 12mm; right: 12mm; bottom: 7mm; display: flex; justify-content: space-between; font-size: 7.5pt; color: #6A6790; border-top: .3mm solid #E1E0F0; padding-top: 2mm; }
+.caixa { background: #F3F3FB; border-radius: 4mm; padding: 4mm 4.5mm; margin-bottom: 3.5mm; }
+.duas { display: grid; grid-template-columns: 1fr 1fr; gap: 3.5mm; }
+.selo { display: inline-block; padding: 1mm 3mm; border-radius: 10mm; font-weight: 800; font-size: 8.5pt; }
+/* capa */
+.capa { color: #fff; background: linear-gradient(150deg, #3B2FD0 0%, #24189A 45%, #120B54 100%); padding: 16mm 12mm; }
+.capa::before { content: ''; position: absolute; inset: 0; background: radial-gradient(70% 45% at 100% 0%, rgba(255,140,40,.55), transparent 70%), radial-gradient(60% 40% at 0% 100%, rgba(60,140,255,.45), transparent 70%); }
+.capa > * { position: relative; }
+.capa .logo { width: 30mm; border-radius: 5mm; box-shadow: 0 4mm 10mm rgba(0,0,0,.35); }
+.capa h1 { font-size: 36pt; font-weight: 900; font-stretch: 75%; text-transform: uppercase; line-height: .92; margin: 14mm 0 5mm; }
+.capa h1 span { color: #FFC93C; }
+.capa .sub { font-size: 12pt; color: #DCDBFF; max-width: 105mm; }
+.capa .icones { display: flex; gap: 4mm; margin-top: 12mm; }
+.capa .icones span { width: 19mm; height: 19mm; border-radius: 5mm; display: grid; place-items: center; background: rgba(255,255,255,.14); border: .3mm solid rgba(255,255,255,.35); }
+.capa .icones img { width: 14mm; }
+.capa .elnino { margin-top: 10mm; display: inline-block; padding: 2mm 4mm; border-radius: 10mm; background: linear-gradient(135deg, #FFB25C, #E2570A); color: #1A0E00; font-weight: 800; }
+.capa .pref { position: absolute; left: 12mm; bottom: 12mm; width: 78mm; }
+/* níveis */
+.nivel { display: grid; grid-template-columns: 32mm 1fr; gap: 3mm; align-items: stretch; margin-bottom: 2.5mm; }
+.nivel .cor { border-radius: 3.5mm; padding: 2.5mm 3mm; font-family: 'Saira DC'; font-weight: 800; font-stretch: 87.5%; font-size: 11pt; line-height: 1.05; display: flex; flex-direction: column; justify-content: center; }
+.nivel .cor small { font-family: 'Atkinson DC'; font-weight: 700; font-size: 7.5pt; opacity: .9; }
+.nivel p { margin: 0; font-size: 8.8pt; align-self: center; }
+.v { background: linear-gradient(135deg, #2FBF74, #0C6B3B); color: #fff; }
+.a { background: linear-gradient(135deg, #FFE97A, #F2AE00); color: #1A1640; }
+.l { background: linear-gradient(135deg, #FFB25C, #E2570A); color: #1A1640; }
+.r { background: linear-gradient(135deg, #FF6B6B, #A30F1D); color: #fff; }
+.receba { display: grid; grid-template-columns: 1fr 30mm; gap: 4mm; align-items: center; background: linear-gradient(135deg, #2BD46B, #0B7F3B); color: #fff; border-radius: 4mm; padding: 4mm 5mm; }
+.receba .qr { background: #fff; border-radius: 3mm; padding: 2mm; }
+.receba b.n { font-family: 'Saira DC'; font-weight: 800; font-size: 13pt; }
+/* kit */
+.kit { columns: 2; column-gap: 5mm; list-style: none; padding: 0; }
+.kit li { break-inside: avoid; padding-left: 6mm; position: relative; }
+.kit li::before { content: ''; position: absolute; left: 0; top: .6mm; width: 3.5mm; height: 3.5mm; border: .5mm solid #3B2FD0; border-radius: 1mm; }
+/* elnino */
+.escuro { color: #fff; background: linear-gradient(160deg, #050B33 0%, #0A2160 50%, #0A4D7A 100%); }
+.escuro .lead { color: #D6E4FF; }
+.escuro .caixa { background: rgba(255,255,255,.1); border: .3mm solid rgba(255,255,255,.25); }
+.escuro .rodape { color: #B8C7EE; border-color: rgba(255,255,255,.2); }
+.num { font-family: 'Saira DC'; font-weight: 900; font-stretch: 75%; font-size: 40pt; line-height: .9; color: #FFB25C; }
+/* contatos */
+.contatos { display: grid; grid-template-columns: 1fr 1fr; gap: 3mm; }
+.contato { border-radius: 4mm; padding: 3mm 4mm; background: #F3F3FB; }
+.contato.d { grid-column: span 2; background: linear-gradient(135deg, #3B2FD0, #120B54); color: #fff; }
+.contato b { display: block; font-family: 'Saira DC'; font-weight: 800; font-stretch: 87.5%; font-size: 17pt; line-height: 1.1; color: #24189A; }
+.contato.d b { color: #FFC93C; font-size: 22pt; }
+.contato span { font-size: 8.5pt; }
+.aviso { font-size: 8.5pt; color: #4A4770; }
+.compacta .caixa { padding: 3mm 4mm; margin-bottom: 2.6mm; }
+.compacta li { margin-bottom: .5mm; }
+.compacta h2 { margin-bottom: 2mm; }
+</style>
+</head>
+<body>
+
+<!-- 1. CAPA -->
+<section class="pag capa">
+  <img class="logo" src="../../assets/img/defesa-civil-guarapuava.png" alt="Defesa Civil de Guarapuava">
+  <h1>Chuva forte e <span>tempestades:</span> como se proteger</h1>
+  <p class="sub">Cartilha da Defesa Civil de Guarapuava com o que fazer antes, durante e depois dos temporais, os níveis de alerta e os telefones de emergência.</p>
+  <span class="elnino">Edição El Niño 2026–2027</span>
+  <div class="icones"><span><img src="../../assets/icons/tempestade.svg" alt=""></span><span><img src="../../assets/icons/vento.svg" alt=""></span><span><img src="../../assets/icons/granizo.svg" alt=""></span><span><img src="../../assets/icons/alagamento.svg" alt=""></span></div>
+  <img class="pref" src="../../assets/img/prefeitura-guarapuava-negativo.png" alt="Prefeitura de Guarapuava">
+</section>
+
+<!-- 2. EL NIÑO -->
+<section class="pag escuro">
+  <h2>Por que está chovendo tanto?</h2>
+  <p class="lead">O El Niño é o aquecimento natural das águas do Oceano Pacífico perto da Linha do Equador. Ele muda os ventos do planeta e, no Sul do Brasil, faz as frentes frias e as áreas de instabilidade ficarem mais tempo sobre a região.</p>
+  <div class="caixa"><h3>O que muda em Guarapuava</h3>
+    <ul><li>Chuva acima da média e temporais mais frequentes.</li><li>Solo encharcado, rios e córregos mais cheios.</li><li>Mais risco de alagamentos, enxurradas, quedas de árvores, destelhamentos e deslizamentos.</li></ul></div>
+  <div class="caixa" style="display:grid;grid-template-columns:auto 1fr;gap:4mm;align-items:center"><span class="num">63%</span><p style="margin:0">de chance de um El Niño <b>muito forte</b> entre novembro de 2026 e janeiro de 2027, segundo a agência climática dos Estados Unidos (NOAA). O SIMEPAR prevê chuva acima da média em todo o Paraná neste período.</p></div>
+  <div class="caixa"><h3>El Niño não é chuva todo dia</h3><p style="margin:0">Ele aumenta a <b>chance</b> de tempo severo, mas cada dia é diferente. Por isso é importante acompanhar o alerta do dia nos canais da Defesa Civil.</p></div>
+  <p style="font-size:8pt;color:#B8C7EE">Fontes: SIMEPAR, Agência Estadual de Notícias do Paraná, CEMADEN e INMET.</p>
+  <div class="rodape"><span>Defesa Civil de Guarapuava</span><span>2</span></div>
+</section>
+
+<!-- 3. ALERTAS -->
+<section class="pag">
+  <h2>Entenda os alertas</h2>
+  <p class="lead">A Defesa Civil usa a mesma escala de risco do SIMEPAR e da Defesa Civil do Paraná. Quanto mais forte a cor, maior o cuidado.</p>
+  <div class="nivel"><div class="cor v">Risco baixo<small>Verde</small></div><p>Pancadas de chuva, temporais isolados, alagamentos pontuais. Fique atento à previsão.</p></div>
+  <div class="nivel"><div class="cor a">Risco moderado<small>Amarelo · Observação</small></div><p>Temporais isolados com rajadas de vento, granizo pontual, chuva intensa, alagamentos e enxurradas pontuais. Evite áreas de risco.</p></div>
+  <div class="nivel"><div class="cor l">Risco alto<small>Laranja · Atenção</small></div><p>Tempestades pontualmente severas, rajadas intensas, granizo, chuva forte em pouco tempo. Possível interrupção de serviços. Prepare a casa e a família.</p></div>
+  <div class="nivel"><div class="cor r">Risco muito alto<small>Vermelho · Alerta</small></div><p>Grande probabilidade de danos severos e risco à vida. Siga as orientações da Defesa Civil e procure local seguro.</p></div>
+  <p class="aviso" style="margin:3mm 0 4mm"><b>Aviso x alerta:</b> o INMET emite <i>avisos meteorológicos</i> sobre o tempo previsto. A Defesa Civil emite <i>alertas</i> considerando também os riscos de cada lugar.</p>
+  <div class="receba">
+    <div><b class="n">Receba os alertas no celular</b>
+      <ul style="margin-top:1.5mm"><li>Siga o canal da Defesa Civil de Guarapuava no WhatsApp (QR ao lado).</li><li>SMS: envie o seu CEP para <b>40199</b>.</li><li>WhatsApp da Defesa Civil Nacional: mande “oi” para <b>(61) 2034-4611</b>.</li></ul></div>
+    <div class="qr"><img src="../../assets/img/qr-canal-whatsapp.svg" alt="QR code do canal" style="width:100%"></div>
+  </div>
+  <div class="rodape"><span>Defesa Civil de Guarapuava</span><span>3</span></div>
+</section>
+
+<!-- 4. ANTES -->
+<section class="pag">
+  <h2>Antes da chuva forte</h2>
+  <div class="duas">
+    <div class="caixa"><h3><img src="../../assets/icons/nublado.svg" alt="">A casa</h3><ul><li>Limpe calhas, ralos e bocas de lobo.</li><li>Confira telhas soltas.</li><li>Recolha objetos do quintal e da sacada.</li><li>Árvore com risco de queda? Peça avaliação à Prefeitura.</li></ul></div>
+    <div class="caixa"><h3><img src="../../assets/icons/sol-nuvem.svg" alt="">A família</h3><ul><li>Combine um ponto de encontro.</li><li>Defina quem busca as crianças.</li><li>Anote os telefones em papel.</li><li>Mantenha o celular carregado.</li></ul></div>
+  </div>
+  <div class="caixa"><h3><img src="../../assets/icons/raio.svg" alt="">Kit de emergência</h3>
+    <ul class="kit"><li>Água potável para 3 dias</li><li>Lanterna e pilhas extras</li><li>Rádio a pilha</li><li>Carregador portátil carregado</li><li>Remédios de uso contínuo e receitas</li><li>Kit de primeiros socorros</li><li>Documentos em saco plástico</li><li>Alimentos que não estragam</li><li>Lista de telefones em papel</li><li>Roupas e calçados extras</li><li>Apito para pedir ajuda</li><li>Ração e água para os animais</li></ul></div>
+  <div class="caixa"><h3>Antes de sair de casa</h3><p style="margin:0">Confira o alerta do dia e a previsão. Em dia de risco alto ou muito alto, evite deslocamentos desnecessários no período da tempestade.</p></div>
+  <div class="rodape"><span>Defesa Civil de Guarapuava</span><span>4</span></div>
+</section>
+
+<!-- 5. DURANTE -->
+<section class="pag compacta">
+  <h2>Durante o temporal</h2>
+  <div class="caixa"><h3><img src="../../assets/icons/tempestade.svg" alt="">Em casa</h3><ul><li>Fique longe de janelas e portas de vidro.</li><li>Tire os aparelhos da tomada e evite o chuveiro elétrico durante os raios.</li><li>Se a água entrar, desligue a energia no quadro de luz.</li><li>Não suba no telhado durante a tempestade.</li></ul></div>
+  <div class="caixa"><h3><img src="../../assets/icons/vento.svg" alt="">Na rua</h3><ul><li>Entre em um prédio ou estabelecimento.</li><li>Não se abrigue embaixo de árvores, placas, marquises ou perto de postes.</li><li>Nunca atravesse rua alagada: <b>15 cm de água em movimento derrubam um adulto</b>.</li><li>Fique longe de córregos, rios e bueiros.</li></ul></div>
+  <div class="caixa"><h3><img src="../../assets/icons/chuva-forte.svg" alt="">No carro</h3><ul><li>Reduza a velocidade e acenda o farol baixo.</li><li>Pare em local seguro, longe de árvores e da rede elétrica.</li><li>Não entre em trecho alagado: <b>30 cm de água corrente podem arrastar um carro</b>.</li><li>Se a água subir em volta, saia e vá para um lugar alto.</li></ul></div>
+  <div class="caixa"><h3><img src="../../assets/icons/vento.svg" alt="">Vendaval e destelhamento</h3><ul><li>Feche portas e janelas e fique em um cômodo interno.</li><li>Se o telhado começar a se soltar, saia daquele cômodo.</li></ul></div>
+  <div class="rodape"><span>Defesa Civil de Guarapuava</span><span>5</span></div>
+</section>
+
+<!-- 6. SITUAÇÕES -->
+<section class="pag compacta">
+  <h2>Situações específicas</h2>
+  <div class="caixa"><h3><img src="../../assets/icons/raio.svg" alt="">Raios</h3><ul><li>Se você ouve trovão, já está ao alcance de raios.</li><li>Evite campos abertos, topos de morro, piscinas e lagos.</li><li>Carro com vidros fechados é um abrigo seguro.</li></ul></div>
+  <div class="caixa"><h3><img src="../../assets/icons/granizo.svg" alt="">Granizo</h3><ul><li>Fique abrigado e longe de janelas e claraboias.</li><li>Não saia para cobrir o carro durante a queda.</li><li>Depois, confira calhas entupidas pelo gelo.</li></ul></div>
+  <div class="caixa"><h3><img src="../../assets/icons/alagamento.svg" alt="">Alagamento e enxurrada</h3><ul><li>Se a água entrar, desligue energia e gás e leve as pessoas para um lugar alto.</li><li>Não volte para buscar objetos.</li><li>Ficou ilhado? Ligue <b>193</b>.</li></ul></div>
+  <div class="caixa"><h3><img src="../../assets/icons/chuva-forte.svg" alt="">Deslizamento de terra</h3><ul><li>Sinais: rachaduras novas, portas emperrando, muros, postes ou árvores inclinando, água barrenta minando do barranco, estalos no terreno.</li><li>Saia na hora e avise a Defesa Civil (199) ou os Bombeiros (193).</li></ul></div>
+  <div class="rodape"><span>Defesa Civil de Guarapuava</span><span>6</span></div>
+</section>
+
+<!-- 7. DEPOIS -->
+<section class="pag">
+  <h2>Depois da chuva</h2>
+  <div class="caixa"><h3><img src="../../assets/icons/raio.svg" alt="">Rede elétrica</h3><ul><li>Não toque em fios caídos, mesmo que pareçam desligados.</li><li>Avise a Copel: <b>0800 51 00 116</b>.</li><li>Se a casa alagou, só religue a energia depois de tudo seco e verificado.</li></ul></div>
+  <div class="caixa"><h3><img src="../../assets/icons/alagamento.svg" alt="">Limpeza e saúde</h3><ul><li>Use luvas e botas: a água da enchente pode transmitir leptospirose.</li><li>Lave e desinfete tudo com água sanitária.</li><li>Jogue fora alimentos que tiveram contato com a água.</li><li>Beba só água filtrada ou fervida.</li></ul></div>
+  <div class="caixa"><h3><img src="../../assets/icons/sol.svg" alt="">Avalie e comunique</h3><ul><li>Procure rachaduras, telhas quebradas e muros inclinados.</li><li>Fotografe os danos.</li><li>Comunique a Defesa Civil: <b>(42) 98427-0618</b> ou <b>199</b>.</li><li>Não volte para um imóvel interditado.</li></ul></div>
+  <div class="rodape"><span>Defesa Civil de Guarapuava</span><span>7</span></div>
+</section>
+
+<!-- 8. CONTATOS -->
+<section class="pag">
+  <h2>Telefones de emergência</h2>
+  <p class="lead">Em caso de risco à vida, ligue 193.</p>
+  <div class="contatos">
+    <div class="contato d"><b>193</b><span>Corpo de Bombeiros · emergências e resgates</span></div>
+    <div class="contato d"><b>(42) 98427-0618</b><span>Defesa Civil de Guarapuava · plantão 24 horas</span></div>
+    <div class="contato"><b>199</b><span>Defesa Civil</span></div>
+    <div class="contato"><b>192</b><span>SAMU</span></div>
+    <div class="contato"><b>190</b><span>Polícia Militar</span></div>
+    <div class="contato"><b>0800 51 00 116</b><span>Copel · fios caídos e falta de energia</span></div>
+    <div class="contato" style="grid-column:span 2"><b>0800 200 0115</b><span>Sanepar · água e esgoto, 24 horas</span></div>
+  </div>
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-top:7mm">
+    <img src="../../assets/img/defesa-civil-guarapuava.png" alt="" style="width:20mm;border-radius:3mm">
+    <img src="../../assets/img/prefeitura-guarapuava.png" alt="Prefeitura de Guarapuava" style="width:78mm">
+  </div>
+  <p class="aviso" style="margin-top:4mm;text-align:center">#DEFESACIVILSOMOSTODOSNÓS</p>
+  <div class="rodape"><span>Defesa Civil de Guarapuava</span><span>8</span></div>
+</section>
+</body>
+</html>

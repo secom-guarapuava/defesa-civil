@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64"><defs>
+<radialGradient id="sol" cx="40%" cy="38%" r="70%"><stop offset="0" stop-color="#FFE680"/><stop offset="1" stop-color="#FFB21E"/></radialGradient>
+<linearGradient id="lua" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FFFFFF"/><stop offset="1" stop-color="#C9C6F2"/></linearGradient>
+<linearGradient id="nb" gradientUnits="userSpaceOnUse" x1="0" y1="18" x2="0" y2="52"><stop offset="0" stop-color="#FFFFFF"/><stop offset="1" stop-color="#D3DAEB"/></linearGradient>
+<linearGradient id="ng" gradientUnits="userSpaceOnUse" x1="0" y1="14" x2="0" y2="50"><stop offset="0" stop-color="#C3CBDD"/><stop offset="1" stop-color="#8E99B5"/></linearGradient>
+<linearGradient id="ne" gradientUnits="userSpaceOnUse" x1="0" y1="10" x2="0" y2="44"><stop offset="0" stop-color="#8C96B3"/><stop offset="1" stop-color="#4F5878"/></linearGradient>
+<linearGradient id="raio" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFE14D"/><stop offset="1" stop-color="#FFA90A"/></linearGradient>
+</defs><g transform="translate(12 8) scale(1.0)"><g fill="#C2CADF" stroke="#C2CADF" stroke-width="2.40"><circle cx="12" cy="15" r="9"/><circle cx="23" cy="10" r="11.5"/><circle cx="33" cy="16" r="8"/><rect x="3" y="14" width="38" height="11" rx="5.5"/></g><g fill="url(#ng)"><circle cx="12" cy="15" r="9"/><circle cx="23" cy="10" r="11.5"/><circle cx="33" cy="16" r="8"/><rect x="3" y="14" width="38" height="11" rx="5.5"/></g></g><g stroke="#3D8CF5" stroke-width="3.4" stroke-linecap="round"><line x1="22" y1="42" x2="18.6" y2="51"/><line x1="32" y1="45" x2="28.6" y2="54"/><line x1="42" y1="42" x2="38.6" y2="51"/></g></svg>

@@ -1,0 +1,393 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Tempo e alertas em Guarapuava — Defesa Civil</title>
+  <meta name="description" content="Previsão do tempo, alertas de chuva e tempestade e orientações da Defesa Civil de Guarapuava (PR). Atualizado automaticamente com dados do SIMEPAR.">
+  <meta name="theme-color" content="#24189A">
+  <meta property="og:title" content="Tempo e alertas em Guarapuava — Defesa Civil">
+  <meta property="og:description" content="Acompanhe o tempo, os alertas e o que fazer em caso de chuva forte em Guarapuava.">
+  <meta property="og:image" content="assets/img/compartilhar-og.jpg">
+  <meta property="og:type" content="website">
+  <link rel="icon" href="assets/img/favicon-32.png" sizes="32x32">
+  <link rel="apple-touch-icon" href="assets/img/icone-192.png">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="preload" href="assets/fonts/saira-var.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="assets/fonts/atkinson-next-var.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="assets/css/site.css">
+</head>
+<body data-nivel="sem">
+  <a class="pular" href="#conteudo">Pular para o conteúdo</a>
+
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <symbol id="i-conversa" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M4 19.5 5.3 16A8 8 0 1 1 8 18.7L4 19.5Z"/><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M9 10.5h6M9 13.5h4"/></symbol>
+    <symbol id="i-compartilhar" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15V3m0 0L7.5 7.5M12 3l4.5 4.5"/><path d="M7 11H5.5A1.5 1.5 0 0 0 4 12.5v7A1.5 1.5 0 0 0 5.5 21h13a1.5 1.5 0 0 0 1.5-1.5v-7a1.5 1.5 0 0 0-1.5-1.5H17"/></g></symbol>
+    <symbol id="i-telefone" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" d="M5 3.5h3.2l1.6 4.2-2.1 1.4a11 11 0 0 0 7.2 7.2l1.4-2.1 4.2 1.6V19a1.5 1.5 0 0 1-1.6 1.5C10.6 20 4 13.4 3.5 5.1A1.5 1.5 0 0 1 5 3.5Z"/></symbol>
+    <symbol id="i-baixar" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m0 0-4.5-4.5M12 15l4.5-4.5"/><path d="M4 17v2.5A1.5 1.5 0 0 0 5.5 21h13a1.5 1.5 0 0 0 1.5-1.5V17"/></g></symbol>
+    <symbol id="i-doc" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M6 2.8h8l4 4V21H6z"/><path d="M14 2.8V7h4M9 12h6M9 15.5h6"/></g></symbol>
+    <symbol id="i-radar" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="4.5"/><path d="M12 12 18 6"/></g></symbol>
+    <symbol id="i-sms" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="6" y="2.5" width="12" height="19" rx="2.5"/><path d="M10.5 18.5h3" stroke-linecap="round"/></g></symbol>
+  </svg>
+
+  <header class="topo vidro" id="topo">
+    <a class="marca" href="#conteudo" aria-label="Defesa Civil de Guarapuava — início">
+      <img src="assets/img/defesa-civil-guarapuava.png" alt="" width="42" height="42">
+      <span><strong>Defesa Civil</strong><small>Guarapuava · Paraná</small></span>
+    </a>
+    <nav class="menu" aria-label="Seções">
+      <a href="#previsao">Previsão</a>
+      <a href="#el-nino">El Niño</a>
+      <a href="#orientacoes">O que fazer</a>
+      <a href="#contatos">Contatos</a>
+    </nav>
+    <a class="btn btn-whats" data-link="canal" href="#" target="_blank" rel="noopener">
+      <svg aria-hidden="true"><use href="#i-conversa"/></svg><span>Seguir o canal</span>
+    </a>
+  </header>
+
+  <main id="conteudo">
+    <!-- ======================= CÉU: alerta + tempo agora + previsão ======================= -->
+    <div class="ceu" id="ceu-area">
+      <canvas id="ceu" aria-hidden="true"></canvas>
+      <div class="container ceu-conteudo">
+        <div class="faixa-info simulacao" id="aviso-simulacao" hidden>Modo demonstração: tempo e alerta simulados. Não é um alerta real.</div>
+
+        <section id="alerta-area" aria-live="polite" aria-label="Situação de alerta"></section>
+
+        <section class="agora" aria-labelledby="titulo-agora">
+          <div>
+            <h2 class="sr" id="titulo-agora">Tempo agora em Guarapuava</h2>
+            <p class="agora-local"><span>Guarapuava agora</span> · <time id="agora-hora">--</time> <span class="fonte" id="agora-fonte"></span></p>
+            <div class="temp-linha">
+              <img id="agora-icone" src="assets/icons/nublado.svg" alt="" width="150" height="150">
+              <span class="temp" id="agora-temp">--°</span>
+            </div>
+            <p class="cond" id="agora-cond">Carregando o tempo…</p>
+            <p class="hoje-resumo" id="hoje-resumo"></p>
+            <div class="agora-acoes">
+              <button class="btn btn-vidro" type="button" data-compartilhar="tempo">
+                <svg aria-hidden="true"><use href="#i-compartilhar"/></svg>Compartilhar o tempo
+              </button>
+              <a class="link-seta" data-link="simepar" href="#" target="_blank" rel="noopener">Previsão completa no SIMEPAR</a>
+            </div>
+          </div>
+          <dl class="agora-dados vidro" id="agora-dados" aria-label="Detalhes do tempo agora"></dl>
+        </section>
+
+        <section class="horas vidro" aria-labelledby="titulo-horas">
+          <div class="horas-topo"><h2 id="titulo-horas">Próximas 24 horas</h2><small>chuva em mm por hora</small></div>
+          <ol id="lista-horas" tabindex="0" aria-label="Previsão hora a hora"></ol>
+        </section>
+
+        <div class="secao-ceu-titulo" id="previsao">
+          <h2>Próximos dias</h2>
+          <p id="previsao-fonte"></p>
+        </div>
+        <ol class="dias" id="lista-dias" aria-label="Previsão para os próximos dias"></ol>
+
+        <figure class="grafico vidro" id="grafico-chuva">
+          <div class="grafico-topo">
+            <h3>Quanto deve chover nas próximas 48 horas</h3>
+            <p id="grafico-total"></p>
+          </div>
+          <svg id="grafico-svg" role="img" aria-label="Gráfico de barras da chuva prevista por hora"></svg>
+        </figure>
+      </div>
+    </div>
+
+    <!-- ======================= Avisos e documentos ======================= -->
+    <section class="secao" id="boletins" aria-labelledby="t-boletins">
+      <div class="container">
+        <div class="secao-cab">
+          <h2 id="t-boletins">Boletins e avisos oficiais</h2>
+          <p>Baixe o boletim de Guarapuava e acompanhe as fontes que a Defesa Civil usa todos os dias.</p>
+        </div>
+        <div class="avisos-inmet" id="avisos-inmet"></div>
+        <div class="docs">
+          <a class="doc" href="data/boletim-guarapuava.pdf" download>
+            <span class="ico"><svg aria-hidden="true"><use href="#i-doc"/></svg></span>
+            <h3>Boletim do tempo de Guarapuava</h3>
+            <p>PDF com alerta em vigor, previsão dos próximos dias, chuva hora a hora e contatos. Atualizado sozinho a cada 30 minutos.</p>
+            <span class="acao" id="boletim-data">Baixar PDF</span>
+          </a>
+          <a class="doc simepar" data-link="simepar" href="#" target="_blank" rel="noopener">
+            <span class="ico"><svg aria-hidden="true"><use href="#i-radar"/></svg></span>
+            <h3>Fique de olho no SIMEPAR</h3>
+            <p>Previsão oficial do Paraná para Guarapuava, com detalhes por hora, radar e satélite.</p>
+            <span class="acao">Abrir simepar.br</span>
+          </a>
+          <a class="doc pr" data-link="defesaCivilPR" href="#" target="_blank" rel="noopener">
+            <span class="ico"><svg aria-hidden="true"><use href="#i-doc"/></svg></span>
+            <h3>Boletins de Gestão de Riscos</h3>
+            <p>Mapas de risco do estado publicados pela Defesa Civil do Paraná com o SIMEPAR.</p>
+            <span class="acao">Abrir Defesa Civil PR</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================= El Niño ======================= -->
+    <section class="secao elnino" id="el-nino" aria-labelledby="t-elnino">
+      <div class="container">
+        <div class="secao-cab">
+          <span class="elnino-selo">El Niño 2026–2027</span>
+          <h2 id="t-elnino">Por que está chovendo tanto em Guarapuava?</h2>
+          <p>O Oceano Pacífico está mais quente que o normal. Isso muda os ventos e faz as frentes frias e as áreas de instabilidade ficarem mais tempo sobre o Sul do Brasil.</p>
+        </div>
+        <div class="elnino-grid">
+          <svg class="mapa-elnino vidro" viewBox="0 0 600 420" role="img" aria-labelledby="mapa-tit mapa-desc">
+            <title id="mapa-tit">Como o El Niño leva mais chuva ao Paraná</title>
+            <desc id="mapa-desc">Mapa simplificado: águas mais quentes no Pacífico equatorial fortalecem o jato subtropical, que segura as frentes frias sobre o Sul do Brasil. A umidade da Amazônia desce até o Paraná e alimenta as tempestades em Guarapuava.</desc>
+            <defs>
+              <radialGradient id="g-quente" cx="50%" cy="50%" r="50%">
+                <stop offset="0" stop-color="#FF4D2E" stop-opacity=".95"/>
+                <stop offset=".45" stop-color="#FF8A2B" stop-opacity=".75"/>
+                <stop offset="1" stop-color="#FFC15C" stop-opacity="0"/>
+              </radialGradient>
+              <linearGradient id="g-terra" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0" stop-color="#2D3F86"/><stop offset="1" stop-color="#1D2B66"/>
+              </linearGradient>
+              <marker id="seta-b" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0 0 10 5 0 10z" fill="#7FD6FF"/></marker>
+              <marker id="seta-v" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0 0 10 5 0 10z" fill="#7CF0B0"/></marker>
+            </defs>
+            <rect width="600" height="420" fill="rgba(4,14,52,.35)"/>
+            <g stroke="rgba(255,255,255,.07)">
+              <line x1="0" y1="35" x2="600" y2="35"/><line x1="0" y1="175" x2="600" y2="175"/><line x1="0" y1="245" x2="600" y2="245"/><line x1="0" y1="315" x2="600" y2="315"/>
+            </g>
+            <line x1="0" y1="105" x2="600" y2="105" stroke="rgba(255,255,255,.35)" stroke-dasharray="4 6"/>
+            <text x="8" y="99" fill="#B9C9F2" font-size="12" font-family="Atkinson DC, sans-serif">Linha do Equador</text>
+            <ellipse class="quente" cx="210" cy="105" rx="200" ry="44" fill="url(#g-quente)"/>
+            <text x="70" y="168" fill="#FFD1A6" font-size="15" font-weight="700" font-family="Atkinson DC, sans-serif">Águas mais quentes que o normal</text>
+            <text x="70" y="186" fill="#B9C9F2" font-size="13" font-family="Atkinson DC, sans-serif">Oceano Pacífico</text>
+            <path fill="url(#g-terra)" stroke="#5E74C9" stroke-width="1.5" stroke-linejoin="round"
+              d="M412 46 L418 29 L434 18 L448 32 L472 31 L488 57 L512 70 L520 94 L528 112 L544 122 L564 126 L580 144 L580 168 L566 196 L564 228 L556 259 L544 266 L526 287 L518 318 L508 340 L500 350 L490 357 L492 374 L472 378 L460 399 L458 420 L450 434 L424 434 L426 399 L426 364 L434 315 L438 266 L439 234 L420 214 L412 189 L402 158 L396 140 L400 112 L400 98 L405 91 L410 77 L411 52 Z"/>
+            <path fill="url(#g-terra)" stroke="#5E74C9" stroke-width="1.5" stroke-linejoin="round" d="M411 45 L402 39 L394 45 L386 38 L378 27 L370 13 L360 8 L350 0 L346 -10 L360 -7 L367 -6 L380 -7 L386 0 L386 24 L393 41 L402 38 L410 43 Z"/>
+            <path class="fluxo" d="M60 300 C 200 250, 330 250, 470 268 S 560 286, 600 292" fill="none" stroke="#7FD6FF" stroke-width="4" stroke-linecap="round" marker-end="url(#seta-b)"/>
+            <text x="60" y="346" fill="#BFEAFF" font-size="14" font-weight="700" font-family="Atkinson DC, sans-serif">Jato subtropical mais forte</text>
+            <text x="60" y="364" fill="#B9C9F2" font-size="12.5" font-family="Atkinson DC, sans-serif">segura as frentes frias sobre o Sul</text>
+            <path class="fluxo" d="M470 130 C 440 180, 455 230, 505 268" fill="none" stroke="#7CF0B0" stroke-width="4" stroke-linecap="round" marker-end="url(#seta-v)"/>
+            <text x="482" y="178" fill="#B8FAD6" font-size="13" font-weight="700" font-family="Atkinson DC, sans-serif">Umidade da</text>
+            <text x="482" y="194" fill="#B8FAD6" font-size="13" font-weight="700" font-family="Atkinson DC, sans-serif">Amazônia</text>
+            <circle class="alvo-pulso" cx="514" cy="283" r="10" fill="none" stroke="#FFC37A" stroke-width="3"/>
+            <circle cx="514" cy="283" r="6" fill="#FFC37A" stroke="#fff" stroke-width="2"/>
+            <rect x="476" y="300" width="96" height="24" rx="12" fill="#FFC37A"/>
+            <text x="524" y="317" text-anchor="middle" fill="#1A0E00" font-size="13" font-weight="800" font-family="Atkinson DC, sans-serif">Guarapuava</text>
+          </svg>
+          <div class="elnino-cards">
+            <article class="elnino-card vidro">
+              <h3>O que é</h3>
+              <p>Um aquecimento natural das águas do Pacífico perto da Linha do Equador, que se repete a cada poucos anos e mexe com o clima do planeta inteiro.</p>
+            </article>
+            <article class="elnino-card vidro">
+              <h3>O que muda aqui</h3>
+              <p>No Sul do Brasil, a chuva fica <strong>acima da média</strong> e os temporais ficam mais frequentes. Com o solo encharcado, cresce o risco de alagamentos, enxurradas, quedas de árvores e deslizamentos.</p>
+            </article>
+            <article class="elnino-card vidro">
+              <h3>Não é chuva todo dia</h3>
+              <p>El Niño aumenta a <strong>chance</strong> de tempo severo, mas cada dia é diferente. Por isso vale acompanhar o alerta do dia aqui e no canal da Defesa Civil.</p>
+            </article>
+          </div>
+        </div>
+        <div class="elnino-fato vidro">
+          <span class="num">63%</span>
+          <p>de chance de um El Niño <strong>muito forte</strong> entre novembro de 2026 e janeiro de 2027, segundo a agência climática dos Estados Unidos (NOAA). O SIMEPAR prevê chuva acima da média em todas as regiões do Paraná neste período.</p>
+        </div>
+        <p class="fontes-txt">Fontes: <a href="https://www.parana.pr.gov.br/aen/Noticia/El-Nino-e-confirmado-e-Simepar-preve-aumento-de-chuvas-ate-dezembro" target="_blank" rel="noopener">SIMEPAR / Agência Estadual de Notícias</a>, <a href="https://www.gov.br/cemaden/pt-br" target="_blank" rel="noopener">CEMADEN</a> e INMET. Mapa ilustrativo, fora de escala.</p>
+      </div>
+    </section>
+
+    <!-- ======================= Orientações ======================= -->
+    <section class="secao" id="orientacoes" aria-labelledby="t-orient">
+      <div class="container">
+        <div class="secao-cab">
+          <h2 id="t-orient">O que fazer em caso de chuva forte</h2>
+          <p>Orientações da Defesa Civil para antes, durante e depois de temporais.</p>
+        </div>
+
+        <div class="abas" role="tablist" aria-label="Momento">
+          <button role="tab" id="aba-antes" aria-controls="p-antes" aria-selected="false" tabindex="-1">Antes</button>
+          <button role="tab" id="aba-durante" aria-controls="p-durante" aria-selected="true">Durante</button>
+          <button role="tab" id="aba-depois" aria-controls="p-depois" aria-selected="false" tabindex="-1">Depois</button>
+        </div>
+
+        <div class="painel-aba" role="tabpanel" id="p-antes" aria-labelledby="aba-antes" hidden>
+          <div class="cards-orient">
+            <article class="card-orient"><div class="topo-card"><img src="assets/icons/nublado.svg" alt=""><h3>Prepare a casa</h3></div>
+              <ul><li>Limpe calhas, ralos e bocas de lobo perto de casa.</li><li>Confira telhas soltas e amarre o que pode voar.</li><li>Recolha objetos do quintal e da sacada.</li><li>Árvore com risco de queda? Peça avaliação à Prefeitura.</li></ul></article>
+            <article class="card-orient"><div class="topo-card"><img src="assets/icons/sol-nuvem.svg" alt=""><h3>Prepare a família</h3></div>
+              <ul><li>Combine um ponto de encontro e quem busca as crianças.</li><li>Guarde documentos e remédios em saco plástico.</li><li>Monte o kit de emergência (lista abaixo).</li><li>Anote os telefones de emergência em papel.</li></ul></article>
+            <article class="card-orient"><div class="topo-card"><img src="assets/icons/raio.svg" alt=""><h3>Fique avisado</h3></div>
+              <ul><li>Siga o canal da Defesa Civil de Guarapuava no WhatsApp.</li><li>Cadastre o seu CEP no SMS 40199.</li><li>Antes de sair, olhe o alerta do dia nesta página.</li><li>Mantenha o celular carregado.</li></ul></article>
+          </div>
+        </div>
+
+        <div class="painel-aba" role="tabpanel" id="p-durante" aria-labelledby="aba-durante">
+          <div class="cards-orient">
+            <article class="card-orient"><div class="topo-card"><img src="assets/icons/tempestade.svg" alt=""><h3>Em casa</h3></div>
+              <ul><li>Fique longe de janelas e portas de vidro.</li><li>Tire os aparelhos da tomada e evite o chuveiro elétrico durante os raios.</li><li>Se a água entrar, desligue a energia no quadro de luz.</li><li>Não suba no telhado durante a tempestade.</li></ul></article>
+            <article class="card-orient"><div class="topo-card"><img src="assets/icons/vento.svg" alt=""><h3>Na rua</h3></div>
+              <ul><li>Entre em um prédio ou estabelecimento.</li><li>Não se abrigue embaixo de árvores, placas, marquises ou perto de postes.</li><li>Nunca atravesse rua alagada: 15 cm de água em movimento derrubam um adulto.</li><li>Fique longe de córregos, rios e bueiros.</li></ul></article>
+            <article class="card-orient"><div class="topo-card"><img src="assets/icons/chuva-forte.svg" alt=""><h3>No carro</h3></div>
+              <ul><li>Reduza a velocidade e acenda o farol baixo.</li><li>Pare em local seguro, longe de árvores e da rede elétrica.</li><li>Não entre em trecho alagado: 30 cm de água corrente podem arrastar um carro.</li><li>Se a água subir em volta, saia e vá para um lugar alto.</li></ul></article>
+          </div>
+        </div>
+
+        <div class="painel-aba" role="tabpanel" id="p-depois" aria-labelledby="aba-depois" hidden>
+          <div class="cards-orient">
+            <article class="card-orient"><div class="topo-card"><img src="assets/icons/raio.svg" alt=""><h3>Rede elétrica</h3></div>
+              <ul><li>Não toque em fios caídos, mesmo que pareçam desligados.</li><li>Avise a Copel: 0800 51 00 116.</li><li>Se a casa alagou, só religue a energia depois de tudo seco e verificado.</li></ul></article>
+            <article class="card-orient"><div class="topo-card"><img src="assets/icons/alagamento.svg" alt=""><h3>Limpeza e saúde</h3></div>
+              <ul><li>Use luvas e botas: a água da enchente pode transmitir leptospirose.</li><li>Lave e desinfete tudo com água sanitária.</li><li>Jogue fora alimentos que tiveram contato com a água.</li><li>Beba só água filtrada ou fervida.</li></ul></article>
+            <article class="card-orient"><div class="topo-card"><img src="assets/icons/sol.svg" alt=""><h3>Avalie e comunique</h3></div>
+              <ul><li>Procure rachaduras, telhas quebradas e muros inclinados.</li><li>Fotografe os danos.</li><li>Comunique a Defesa Civil: (42) 98427-0618 ou 199.</li><li>Não volte para um imóvel interditado.</li></ul></article>
+          </div>
+        </div>
+
+        <div class="situacoes">
+          <h3 class="sub">Situações específicas</h3>
+          <details class="situacao"><summary><img src="assets/icons/vento.svg" alt="">Vendaval e destelhamento</summary>
+            <div class="conteudo"><ul><li>Feche portas e janelas e recolha objetos soltos.</li><li>Fique em um cômodo interno, longe de vidros.</li><li>Se o telhado começar a se soltar, saia daquele cômodo.</li><li>Não fique embaixo de árvores, placas e estruturas metálicas.</li></ul></div></details>
+          <details class="situacao"><summary><img src="assets/icons/raio.svg" alt="">Raios</summary>
+            <div class="conteudo"><ul><li>Se você ouve trovão, já está ao alcance de raios: procure abrigo.</li><li>Evite campos abertos, topos de morro, piscinas e lagos.</li><li>Afaste-se de cercas de arame, torres, postes e árvores isoladas.</li><li>Dentro de casa, evite telefone com fio, chuveiro elétrico e aparelhos na tomada.</li><li>Carro com vidros fechados é um abrigo seguro.</li></ul></div></details>
+          <details class="situacao"><summary><img src="assets/icons/granizo.svg" alt="">Granizo</summary>
+            <div class="conteudo"><ul><li>Fique abrigado e longe de janelas e claraboias.</li><li>Não saia para cobrir o carro ou recolher objetos durante a queda.</li><li>Depois, confira telhado e calhas: o gelo acumulado entope e causa infiltração.</li></ul></div></details>
+          <details class="situacao"><summary><img src="assets/icons/alagamento.svg" alt="">Alagamento e enxurrada</summary>
+            <div class="conteudo"><ul><li>Nunca atravesse áreas alagadas, a pé ou de carro.</li><li>Se a água começar a entrar, desligue energia e gás e leve as pessoas para um lugar alto.</li><li>Não volte para buscar objetos.</li><li>Ficou ilhado? Ligue 193.</li></ul></div></details>
+          <details class="situacao"><summary><img src="assets/icons/chuva-forte.svg" alt="">Deslizamento de terra</summary>
+            <div class="conteudo"><ul><li>Fique atento a rachaduras novas em paredes, pisos e no terreno.</li><li>Portas e janelas emperrando, muros, postes ou árvores inclinando são sinal de alerta.</li><li>Água barrenta minando do barranco ou estalos no terreno: saia na hora.</li><li>Avise a Defesa Civil (199) ou os Bombeiros (193).</li></ul></div></details>
+          <details class="situacao"><summary><img src="assets/icons/tempestade.svg" alt="">Queda de árvores e fios</summary>
+            <div class="conteudo"><ul><li>Não se aproxime de fios caídos e avise a Copel: 0800 51 00 116.</li><li>Árvore caída na via ou sobre imóvel: Defesa Civil (42) 98427-0618.</li><li>Não tente cortar ou remover sozinho árvores grandes.</li></ul></div></details>
+        </div>
+
+        <div class="kit-cartilha">
+          <div class="kit">
+            <h3>Kit de emergência</h3>
+            <p>Marque o que você já tem em casa. A lista fica salva neste aparelho.</p>
+            <ul class="kit-lista" id="kit-lista"></ul>
+            <div class="kit-progresso" aria-hidden="true"><i id="kit-barra"></i></div>
+            <p id="kit-texto" style="margin:8px 0 0"></p>
+          </div>
+          <div class="cartilha">
+            <div>
+              <h3>Cartilha completa para baixar</h3>
+              <p>Todas as orientações, os níveis de alerta, o kit de emergência e os contatos em um PDF para imprimir ou mandar no WhatsApp.</p>
+            </div>
+            <a class="btn" href="assets/docs/cartilha-chuvas-defesa-civil-guarapuava.pdf" download>
+              <svg aria-hidden="true"><use href="#i-baixar"/></svg>Baixar cartilha (PDF)
+            </a>
+            <img class="capa" src="assets/img/cartilha-capa.png" alt="" width="120" height="170" loading="lazy">
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================= Receba alertas ======================= -->
+    <section class="secao" id="receba" aria-labelledby="t-receba" style="padding-top:0">
+      <div class="container receba">
+        <div class="canal">
+          <div>
+            <h2 id="t-receba">Receba os alertas da Defesa Civil de Guarapuava</h2>
+            <p>Siga o canal oficial no WhatsApp e ative o sininho. Os avisos chegam no seu celular assim que são publicados.</p>
+            <a class="btn" data-link="canal" href="#" target="_blank" rel="noopener"><svg aria-hidden="true"><use href="#i-conversa"/></svg>Seguir o canal no WhatsApp</a>
+          </div>
+          <div class="qr"><img src="assets/img/qr-canal-whatsapp.svg" alt="QR code do canal da Defesa Civil de Guarapuava no WhatsApp" width="126" height="126"><small>Aponte a câmera</small></div>
+        </div>
+        <div class="outros-canais">
+          <div class="canal-mini">
+            <span class="grande">40199</span>
+            <p><b>SMS da Defesa Civil.</b> Envie o seu CEP por SMS para 40199. É gratuito.</p>
+            <a class="btn btn-claro" href="sms:40199"><svg aria-hidden="true"><use href="#i-sms"/></svg>Enviar SMS</a>
+          </div>
+          <div class="canal-mini">
+            <span class="grande">(61) 2034-4611</span>
+            <p><b>WhatsApp da Defesa Civil Nacional.</b> Mande “oi” e cadastre Guarapuava.</p>
+            <a class="btn btn-claro" data-link="whatsNacional" href="#" target="_blank" rel="noopener"><svg aria-hidden="true"><use href="#i-conversa"/></svg>Mandar “oi”</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================= Contatos ======================= -->
+    <section class="secao contatos-sec" id="contatos" aria-labelledby="t-contatos">
+      <div class="container">
+        <div class="secao-cab">
+          <h2 id="t-contatos">Telefones de emergência</h2>
+          <p>Toque no número para ligar. Em caso de risco à vida, ligue 193.</p>
+        </div>
+        <ul class="contatos" id="lista-contatos"></ul>
+      </div>
+    </section>
+  </main>
+
+  <footer class="rodape">
+    <div class="container">
+      <div class="rodape-grid">
+        <div>
+          <div class="logos">
+            <img class="dc" src="assets/img/defesa-civil-guarapuava.png" alt="Defesa Civil de Guarapuava" width="64" height="64" loading="lazy">
+            <img class="pref" src="assets/img/prefeitura-guarapuava-negativo.png" alt="Prefeitura de Guarapuava — Governo Municipal" width="260" height="55" loading="lazy">
+          </div>
+          <p style="margin-top:16px">Coordenadoria Municipal de Proteção e Defesa Civil de Guarapuava. Este site se atualiza sozinho com a previsão do SIMEPAR e os alertas publicados pela equipe.</p>
+        </div>
+        <div>
+          <h2>Origem dos dados</h2>
+          <ul class="estado-fontes" id="estado-fontes"></ul>
+          <p style="margin-top:10px" id="ultima-atualizacao"></p>
+        </div>
+        <div>
+          <h2>Área da equipe</h2>
+          <ul>
+            <li><a href="painel.html">Painel de monitoramento</a></li>
+            <li><a href="gerenciar.html">Publicar alerta e gerar artes</a></li>
+            <li><a href="?simular=tempestade&amp;alerta=alto">Ver demonstração de alerta</a></li>
+          </ul>
+        </div>
+      </div>
+      <p class="legal">Previsão: SIMEPAR. Dados complementares de modelo: <a href="https://open-meteo.com/" target="_blank" rel="noopener">Open-Meteo</a> (CC BY 4.0). Avisos meteorológicos: INMET. Em caso de divergência, valem os boletins oficiais da Defesa Civil do Paraná e do SIMEPAR. #DEFESACIVILSOMOSTODOSNÓS</p>
+    </div>
+  </footer>
+
+  <nav class="barra-celular vidro" aria-label="Ações rápidas">
+    <button type="button" data-compartilhar="auto"><svg aria-hidden="true"><use href="#i-compartilhar"/></svg>Compartilhar</button>
+    <a class="ligar" href="tel:193"><svg aria-hidden="true"><use href="#i-telefone"/></svg>Ligar 193</a>
+    <a class="canal-b" data-link="canal" href="#" target="_blank" rel="noopener"><svg aria-hidden="true"><use href="#i-conversa"/></svg>Canal</a>
+  </nav>
+
+  <div class="dica" id="dica" hidden></div>
+
+  <dialog class="compartilhar" id="dlg-compartilhar" aria-labelledby="comp-titulo">
+    <div class="comp-grid">
+      <div class="comp-previa"><canvas id="comp-canvas" width="1080" height="1920" aria-label="Prévia da imagem para compartilhar"></canvas></div>
+      <form class="comp-form" method="dialog" id="comp-form">
+        <h2 id="comp-titulo">Compartilhar</h2>
+        <fieldset class="opcoes" id="comp-tipo">
+          <legend>O que você quer mandar?</legend>
+          <label><input type="radio" name="tipo" value="alerta"><span>Alerta em vigor</span></label>
+          <label><input type="radio" name="tipo" value="tempo" checked><span>Tempo agora</span></label>
+          <label><input type="radio" name="tipo" value="previsao"><span>Próximos 3 dias</span></label>
+        </fieldset>
+        <fieldset class="opcoes">
+          <legend>Formato da imagem</legend>
+          <label><input type="radio" name="formato" value="status" checked><span>Status (vertical)</span></label>
+          <label><input type="radio" name="formato" value="feed"><span>Post (4:5)</span></label>
+        </fieldset>
+        <div>
+          <label class="rot" for="comp-texto">Legenda (pode editar)</label>
+          <textarea id="comp-texto"></textarea>
+        </div>
+        <div class="comp-botoes">
+          <button class="btn btn-whats" type="button" id="comp-enviar"><svg aria-hidden="true"><use href="#i-compartilhar"/></svg>Compartilhar imagem</button>
+          <button class="btn btn-marca" type="button" id="comp-baixar"><svg aria-hidden="true"><use href="#i-baixar"/></svg>Baixar imagem</button>
+          <button class="btn btn-claro" type="button" id="comp-texto-whats"><svg aria-hidden="true"><use href="#i-conversa"/></svg>Mandar só o texto</button>
+          <button class="btn btn-claro" type="button" id="comp-copiar">Copiar legenda</button>
+        </div>
+        <p class="comp-msg" id="comp-msg" role="status"></p>
+      </form>
+    </div>
+    <button class="comp-fechar" type="button" id="comp-fechar" aria-label="Fechar">×</button>
+  </dialog>
+
+  <script type="module" src="assets/js/app.js"></script>
+</body>
+</html>

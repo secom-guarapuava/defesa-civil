@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Publicar alerta e gerar artes — Defesa Civil de Guarapuava</title>
+  <meta name="robots" content="noindex">
+  <link rel="icon" href="assets/img/favicon-32.png" sizes="32x32">
+  <link rel="stylesheet" href="assets/css/site.css">
+  <style>
+    body { background: radial-gradient(80% 60% at 0% 0%, #DCD8FF, transparent 60%), radial-gradient(60% 60% at 100% 0%, #FFE2C4, transparent 60%), var(--superficie); }
+    .g-topo { display: flex; align-items: center; gap: 14px; padding: 18px var(--margem); }
+    .g-topo img { width: 46px; height: 46px; border-radius: 10px; }
+    .g-topo h1 { font-size: 1.5rem; font-weight: 800; font-stretch: 87.5%; }
+    .g-topo small { color: var(--tinta-2); }
+    .g-topo a { margin-left: auto; }
+    .g-grid { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, .9fr); gap: 20px; padding: 0 var(--margem) 60px; max-width: 1400px; margin: 0 auto; align-items: start; }
+    .bloco { background: rgba(255,255,255,.85); border: 1px solid #fff; border-radius: var(--r-g); padding: 24px; box-shadow: 0 20px 50px -30px rgba(36,24,154,.35); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
+    .bloco + .bloco { margin-top: 20px; }
+    .bloco h2 { font-size: 1.4rem; margin-bottom: 14px; }
+    .campo { display: grid; gap: 6px; margin-bottom: 16px; }
+    fieldset.campo { border: 0; padding: 0; margin: 0 0 16px; min-width: 0; }
+    fieldset.campo legend { padding: 0; margin-bottom: 6px; }
+    .niveis small { color: inherit; font-weight: 700; opacity: .92; }
+    .campo > label, .campo legend { font-weight: 800; }
+    .campo small { color: var(--tinta-2); }
+    input[type=text], input[type=password], input[type=datetime-local], textarea, select { font: inherit; padding: 11px 14px; border-radius: 12px; border: 1.5px solid var(--linha); background: #fff; width: 100%; color: var(--tinta); }
+    textarea { min-height: 84px; resize: vertical; }
+    .duas { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .niveis { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; border: 0; padding: 0; margin: 0; }
+    .niveis label { position: relative; }
+    .niveis input { position: absolute; opacity: 0; }
+    .niveis span { display: grid; place-items: center; text-align: center; min-height: 64px; padding: 8px; border-radius: 16px; font-weight: 800; line-height: 1.15; cursor: pointer; border: 3px solid transparent; box-shadow: inset 0 1px 0 rgba(255,255,255,.5); }
+    .niveis input:checked + span { border-color: var(--tinta); box-shadow: 0 0 0 3px #fff inset, 0 10px 24px -10px rgba(0,0,0,.5); }
+    .niveis input:focus-visible + span { outline: 3px solid #FFC93C; outline-offset: 2px; }
+    .chips { display: flex; flex-wrap: wrap; gap: 8px; border: 0; padding: 0; margin: 0; }
+    .chips label { position: relative; }
+    .chips input { position: absolute; opacity: 0; }
+    .chips span { display: inline-flex; gap: 6px; align-items: center; padding: 7px 14px; border-radius: 999px; border: 1.5px solid var(--linha); background: #fff; font-weight: 700; cursor: pointer; }
+    .chips input:checked + span { background: var(--grad-marca); color: #fff; border-color: transparent; }
+    .chips input:focus-visible + span { outline: 3px solid #FFC93C; outline-offset: 2px; }
+    .dia-item { border: 1.5px solid var(--linha); border-radius: 16px; padding: 14px; display: grid; gap: 8px; margin-bottom: 10px; background: #fff; }
+    .dia-item .linha { display: grid; grid-template-columns: 1fr 180px auto; gap: 8px; }
+    .acoes-linha { display: flex; flex-wrap: wrap; gap: 10px; }
+    .msg { font-weight: 700; margin: 10px 0 0; min-height: 1.4em; }
+    .msg.ok { color: #0B7F3B; } .msg.erro { color: #B3121F; }
+    .previa { position: sticky; top: 16px; }
+    .previa canvas { width: 100%; height: auto; max-height: 70vh; object-fit: contain; border-radius: 16px; background: #1B1466; }
+    .situacao-escolha { display: flex; gap: 8px; flex-wrap: wrap; border: 0; padding: 0; margin: 0 0 16px; }
+    details.ajuda { background: #F6F5FF; border-radius: 14px; padding: 12px 16px; margin-bottom: 14px; }
+    details.ajuda summary { font-weight: 800; cursor: pointer; }
+    details.ajuda ol { margin: 8px 0 0; padding-left: 20px; display: grid; gap: 4px; }
+    .desativado { opacity: .45; pointer-events: none; }
+    @media (max-width: 980px) { .g-grid { grid-template-columns: 1fr; } .previa { position: static; } }
+    @media (max-width: 560px) { .niveis { grid-template-columns: 1fr 1fr; } .duas { grid-template-columns: 1fr; } .dia-item .linha { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <header class="g-topo">
+    <img src="assets/img/defesa-civil-guarapuava.png" alt="">
+    <div><h1>Publicar alerta e gerar artes</h1><small>Área da equipe da Defesa Civil de Guarapuava</small></div>
+    <a class="btn btn-claro" href="./">Ver o site</a>
+  </header>
+
+  <div class="g-grid">
+    <div>
+      <form class="bloco" id="form-alerta" autocomplete="off">
+        <h2>1. Monte o alerta</h2>
+        <fieldset class="situacao-escolha chips" id="situacao">
+          <label><input type="radio" name="ativo" value="sim" checked><span>Publicar alerta</span></label>
+          <label><input type="radio" name="ativo" value="nao"><span>Encerrar alerta (voltar para “sem alerta”)</span></label>
+        </fieldset>
+
+        <div id="campos-alerta">
+          <fieldset class="campo">
+            <legend>Nível de risco</legend>
+            <div class="niveis" id="niveis"></div>
+          </fieldset>
+          <div class="campo">
+            <label for="f-titulo">Título (curto, como no card)</label>
+            <input type="text" id="f-titulo" list="sug-titulos" maxlength="60" placeholder="Ex.: Risco alto de tempestades" required>
+            <datalist id="sug-titulos">
+              <option value="Risco alto de tempestades"><option value="Risco muito alto de tempestades severas"><option value="Risco moderado de temporais">
+              <option value="Risco de chuva forte"><option value="Risco de vendaval"><option value="Risco de granizo"><option value="Chuva volumosa em 24 horas">
+            </datalist>
+          </div>
+          <div class="campo">
+            <label for="f-resumo">Resumo em uma frase</label>
+            <textarea id="f-resumo" maxlength="220" placeholder="Ex.: Chuva forte em pouco tempo, rajadas de vento, raios e granizo localizado."></textarea>
+          </div>
+          <div class="duas">
+            <div class="campo"><label for="f-inicio">Início da vigência</label><input type="datetime-local" id="f-inicio" required></div>
+            <div class="campo"><label for="f-fim">Fim da vigência</label><input type="datetime-local" id="f-fim" required><small>Depois desse horário o alerta some sozinho do site.</small></div>
+          </div>
+          <fieldset class="campo">
+            <legend>Fenômenos esperados</legend>
+            <div class="chips" id="fenomenos"></div>
+          </fieldset>
+          <div class="campo">
+            <span style="font-weight:800">Texto por dia</span>
+            <div id="dias"></div>
+            <div class="acoes-linha">
+              <button class="btn btn-claro" type="button" id="add-dia">Adicionar dia</button>
+              <button class="btn btn-claro" type="button" id="auto-dias">Criar dias pela vigência</button>
+            </div>
+          </div>
+          <fieldset class="campo">
+            <legend>Podem ocorrer</legend>
+            <div class="chips" id="impactos"></div>
+          </fieldset>
+          <div class="campo">
+            <label for="f-fonte">Fonte</label>
+            <input type="text" id="f-fonte" value="Defesa Civil de Guarapuava, com base no Boletim de Gestão de Riscos do SIMEPAR">
+          </div>
+        </div>
+        <div class="acoes-linha">
+          <button class="btn btn-claro" type="button" id="carregar">Carregar o alerta publicado</button>
+          <button class="btn btn-claro" type="button" id="limpar">Limpar formulário</button>
+        </div>
+      </form>
+
+      <section class="bloco" aria-labelledby="t-publicar">
+        <h2 id="t-publicar">2. Publique no site</h2>
+        <details class="ajuda">
+          <summary>Como configurar (uma vez por computador)</summary>
+          <ol>
+            <li>No GitHub, abra <b>Settings → Developer settings → Personal access tokens → Fine-grained tokens</b>.</li>
+            <li>Crie um token só para este repositório, com permissão <b>Contents: Read and write</b>.</li>
+            <li>Cole o token abaixo. Marque “lembrar” só em computador de uso da equipe.</li>
+          </ol>
+        </details>
+        <div class="duas">
+          <div class="campo"><label for="g-usuario">Usuário ou organização no GitHub</label><input type="text" id="g-usuario" placeholder="ex.: defesacivilguarapuava"></div>
+          <div class="campo"><label for="g-repo">Repositório</label><input type="text" id="g-repo" placeholder="ex.: site-defesa-civil"></div>
+        </div>
+        <div class="campo"><label for="g-token">Token de acesso</label><input type="password" id="g-token" placeholder="github_pat_..."></div>
+        <label style="display:flex;gap:8px;align-items:center;margin-bottom:16px"><input type="checkbox" id="g-lembrar"> Lembrar usuário, repositório e token neste computador</label>
+        <div class="acoes-linha">
+          <button class="btn btn-marca" type="button" id="publicar">Publicar no site</button>
+          <button class="btn btn-claro" type="button" id="baixar-json">Baixar alerta.json</button>
+        </div>
+        <p class="msg" id="msg-publicar" role="status"></p>
+        <p style="color:var(--tinta-2);font-size:.92rem;margin:6px 0 0">Depois de publicar, o site e o boletim em PDF se atualizam em cerca de 1 a 2 minutos. Sem token, baixe o arquivo e envie em <b>data/alerta.json</b> no GitHub (Add file → Upload files).</p>
+      </section>
+    </div>
+
+    <aside class="bloco previa" aria-labelledby="t-previa">
+      <h2 id="t-previa">3. Arte e legenda</h2>
+      <fieldset class="chips" id="formato" style="margin-bottom:12px">
+        <label><input type="radio" name="formato" value="feed" checked><span>Post 4:5</span></label>
+        <label><input type="radio" name="formato" value="status"><span>Status 9:16</span></label>
+      </fieldset>
+      <canvas id="arte" width="1080" height="1350" aria-label="Prévia da arte do alerta"></canvas>
+      <div class="acoes-linha" style="margin-top:12px">
+        <button class="btn btn-marca" type="button" id="baixar-arte">Baixar arte</button>
+        <button class="btn btn-claro" type="button" id="copiar-legenda">Copiar legenda</button>
+        <button class="btn btn-whats" type="button" id="whats-legenda">Mandar texto no WhatsApp</button>
+      </div>
+      <div class="campo" style="margin-top:14px"><label for="legenda">Legenda</label><textarea id="legenda" style="min-height:200px;font-size:.9rem"></textarea></div>
+      <p class="msg" id="msg-arte" role="status"></p>
+    </aside>
+  </div>
+  <script type="module" src="assets/js/gerenciar.js"></script>
+</body>
+</html>
