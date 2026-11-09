@@ -2,7 +2,7 @@
 // Usado pelo botão "Compartilhar" do site e pela página de gestão de alertas.
 import { CONFIG } from './config.js';
 import { NIVEIS, FENOMENOS, iconeURL } from './clima.js';
-import { diaSemana, fmtData, fmtHora, fmtQuando, graus, mm, nomeDoDia, num } from './util.js';
+import { diaSemana, fmtData, fmtHora, fmtQuando, fmtVigencia, graus, mm, nomeDoDia, num } from './util.js';
 
 export const FORMATOS = { status: [1080, 1920], feed: [1080, 1350] };
 
@@ -196,11 +196,11 @@ function pilulaContatos(c, w, y, alto = 150) {
     c.fillStyle = '#fff';
     c.textAlign = 'center';
     c.font = '400 30px "Atkinson DC"';
-    c.fillText(rot, x + larg / 2, y + 44);
-    const r = ajustar(c, numero, (s) => `800 ${s}px "Saira SemiCond"`, larg - 40, 1, 58, 36);
+    c.fillText(rot, x + larg / 2, y + alto * 0.3);
+    const r = ajustar(c, numero, (s) => `800 ${s}px "Saira SemiCond"`, larg - 40, 1, alto > 160 ? 62 : 58, 36);
     c.font = `800 ${r.s}px "Saira SemiCond"`;
-    c.fillText(numero, x + larg / 2, y + (extra ? 98 : 112));
-    if (extra) { c.font = '700 28px "Atkinson DC"'; c.fillText(extra, x + larg / 2, y + 134); }
+    c.fillText(numero, x + larg / 2, y + alto * (extra ? 0.66 : 0.74));
+    if (extra) { c.font = '700 28px "Atkinson DC"'; c.fillText(extra, x + larg / 2, y + alto * 0.89); }
     c.textAlign = 'left';
   });
 }
@@ -225,122 +225,214 @@ function faixaAlertaPequena(c, w, y, alerta) {
 }
 
 // ------------------------------------------------------------------ modelos
+// Dicas curtas para a arte, conforme os fenômenos do alerta
+const DICAS = {
+  'chuva-forte': 'Não atravesse ruas alagadas, nem a pé nem de carro.',
+  'alagamentos': 'Fique longe de córregos, rios e bueiros.',
+  'rajadas': 'Não se abrigue sob árvores, placas ou postes.',
+  'raios': 'Evite áreas abertas e tire aparelhos da tomada.',
+  'granizo': 'Fique longe de janelas e não saia durante a queda.',
+  'tempestade': 'Fique em local abrigado até a tempestade passar.',
+  'neblina': 'Dirija com farol baixo e velocidade reduzida.',
+};
+function dicasDoAlerta(alerta) {
+  const lista = [];
+  for (const f of alerta.fenomenos || []) if (DICAS[f] && !lista.includes(DICAS[f])) lista.push(DICAS[f]);
+  for (const d of ['Fique em local abrigado até o tempo melhorar.', 'Em emergência, ligue 193.']) if (lista.length < 3 && !lista.includes(d)) lista.push(d);
+  return lista.slice(0, 3);
+}
+
+/**
+ * Arte do alerta, montada em blocos que se distribuem na altura disponível:
+ * selo, título, texto (dias/resumo), vigência e, se sobrar espaço, fenômenos e "o que fazer".
+ * O que sobra depois disso vira espaçamento uniforme entre os blocos — sem buracos.
+ */
 async function arteAlerta(c, w, h, { alerta, url }) {
   const n = NIVEIS[alerta.nivel] || NIVEIS.alto;
   const vertical = h > 1500;
+  const corTexto = n.texto === '#FFFFFF' ? '#FFFFFF' : '#1A1640';
   gradiente(c, w, h, n.grad);
   chuvaTextura(c, w, h, 0.1);
   brilhos(c, w, h, '255,255,255', 0.35);
   const agora = new Date();
-  await cabecalho(c, w, 64, [diaSemana(agora).replace(/^./, (x) => x.toUpperCase()), `${fmtData(agora)} · ${fmtHora(agora)}`], n.texto === '#FFFFFF' ? '#FFFFFF' : '#1A1640');
+  await cabecalho(c, w, 64, [diaSemana(agora).replace(/^./, (x) => x.toUpperCase()), `${fmtData(agora)} · ${fmtHora(agora)}`], corTexto);
 
-  let y = vertical ? 250 : 220;
-  // selo do nível
-  c.font = '800 32px "Atkinson DC"';
+  const X = 64, L = w - 128;               // margens
+  const topo = vertical ? 236 : 214;       // logo abaixo do cabeçalho
+  const contatosH = vertical ? 170 : 150;
+  const contatosY = h - 150 - 20 - 26 - contatosH;
+  const limite = contatosY - (vertical ? 44 : 28); // fim da área de conteúdo
+  const gapMin = vertical ? 26 : 18;
+  const gapMax = vertical ? 64 : 40;
+
+  // ---------- blocos fixos
   const selo = `ALERTA ${n.cor.toUpperCase()} · ${n.nome.toUpperCase()}`;
-  const sw = c.measureText(selo).width + 84;
-  vidro(c, 64, y, sw, 64, 32, 0.28);
-  c.fillStyle = n.texto;
-  c.beginPath(); c.arc(64 + 34, y + 32, 15, 0, Math.PI * 2); c.fill();
-  c.fillStyle = n.texto === '#FFFFFF' ? n.grad[1] : '#FFFFFF';
-  c.font = '900 24px "Saira Cond"'; c.textAlign = 'center'; c.fillText('!', 64 + 34, y + 41); c.textAlign = 'left';
-  c.fillStyle = n.texto;
-  c.font = '800 32px "Atkinson DC"';
-  c.fillText(selo, 64 + 62, y + 43);
-  y += 92;
+  const blocoSelo = {
+    h: 64,
+    desenhar(y) {
+      c.font = '800 32px "Atkinson DC"';
+      const sw = c.measureText(selo).width + 84;
+      vidro(c, X, y, sw, 64, 32, 0.28);
+      c.fillStyle = n.texto;
+      c.beginPath(); c.arc(X + 34, y + 32, 15, 0, Math.PI * 2); c.fill();
+      c.fillStyle = n.texto === '#FFFFFF' ? n.grad[1] : '#FFFFFF';
+      c.font = '900 24px "Saira Cond"'; c.textAlign = 'center'; c.fillText('!', X + 34, y + 41); c.textAlign = 'left';
+      c.fillStyle = n.texto; c.font = '800 32px "Atkinson DC"'; c.fillText(selo, X + 62, y + 43);
+    },
+  };
 
-  // título em painel anil (como nas artes da Defesa Civil)
   const titulo = (alerta.titulo || n.nome).toUpperCase();
-  const t = ajustar(c, titulo, (s) => `900 ${s}px "Saira Cond"`, w - 200, vertical ? 3 : 2, vertical ? 136 : 104, 56);
-  const th = t.l.length * t.s * 0.98 + (vertical ? 70 : 56);
-  c.save();
-  rr(c, 64, y, w - 128, th, 48);
-  const gt = c.createLinearGradient(64, y, w - 64, y + th);
-  gt.addColorStop(0, '#2B1DB5'); gt.addColorStop(1, '#120B54');
-  c.fillStyle = gt; c.fill();
-  c.strokeStyle = 'rgba(255,255,255,0.35)'; c.lineWidth = 2; c.stroke();
-  c.restore();
-  c.fillStyle = '#FFD24A';
-  c.font = `900 ${t.s}px "Saira Cond"`;
-  t.l.forEach((l, i) => c.fillText(l, 100, y + (vertical ? 30 : 24) + t.s * 0.86 + i * t.s * 0.98));
-  y += th + (vertical ? 28 : 22);
+  const padT = vertical ? 40 : 30;
+  const tituloBloco = (fator) => {
+    const t = ajustar(c, titulo, (s) => `900 ${s}px "Saira Cond"`, L - 72, vertical ? 3 : 2, Math.round((vertical ? 150 : 116) * fator), 52);
+    return {
+      h: t.l.length * t.s * 0.98 + padT * 2 - t.s * 0.12,
+      desenhar(y) {
+        c.save();
+        rr(c, X, y, L, this.h, 48);
+        const g = c.createLinearGradient(X, y, X + L, y + this.h);
+        g.addColorStop(0, '#2B1DB5'); g.addColorStop(1, '#120B54');
+        c.fillStyle = g; c.fill();
+        c.strokeStyle = 'rgba(255,255,255,0.35)'; c.lineWidth = 2; c.stroke();
+        c.restore();
+        c.fillStyle = '#FFD24A';
+        c.font = `900 ${t.s}px "Saira Cond"`;
+        t.l.forEach((l, i) => c.fillText(l, X + 36, y + padT + t.s * 0.8 + i * t.s * 0.98));
+      },
+    };
+  };
 
-  // painel claro com os dias / resumo
-  const rodapeY = h - 150 - 20;
-  const contatosH = 150;
-  const vig = alerta.inicio && alerta.fim ? `Vigência: ${fmtQuando(new Date(alerta.inicio))} até ${fmtQuando(new Date(alerta.fim))}` : '';
-  const fenoms = (alerta.fenomenos || []).filter((f) => FENOMENOS[f]).slice(0, 4);
-  const fenH = vertical && fenoms.length ? 150 : 0;
-  const vigH = vig ? 56 : 0;
-  const painelMax = rodapeY - y - contatosH - 40 - fenH - vigH - (vertical ? 30 : 0);
-  const larg = w - 200;
+  const vig = alerta.inicio && alerta.fim ? `Vigência: ${fmtVigencia(alerta.inicio, alerta.fim)}` : '';
+  const vigTam = ajustar(c, vig, (s) => `700 ${s}px "Atkinson DC"`, L, 1, vertical ? 34 : 29, 20).s;
+  const blocoVig = vig ? {
+    h: vigTam * 1.3,
+    desenhar(y) {
+      c.fillStyle = n.texto; c.textAlign = 'center';
+      c.font = `700 ${vigTam}px "Atkinson DC"`;
+      c.fillText(vig, w / 2, y + vigTam);
+      c.textAlign = 'left';
+    },
+  } : null;
+
+  // ---------- painel de texto (tamanho de letra variável)
+  const larg = L - 72;
   const montar = (comImpactos) => {
     const b = [];
     if (alerta.dias?.length) alerta.dias.forEach((d) => b.push(['dia', d.rotulo], ['txt', d.texto]));
     else if (alerta.resumo) b.push(['txt', alerta.resumo]);
     if (comImpactos && alerta.impactos?.length) b.push(['imp', `Podem ocorrer: ${alerta.impactos.join(', ')}.`]);
-    return b;
+    return b.filter(([, txt]) => txt);
   };
-  const medir = (blocos, s) => {
-    let total = 56;
-    const res = blocos.map(([tipo, txt]) => {
-      c.font = tipo === 'dia' ? `800 ${s * 1.12}px "Saira SemiCond"` : `${tipo === 'imp' ? 700 : 400} ${s}px "Atkinson DC"`;
+  const painel = (blocos, s) => {
+    const pad = Math.round(s * 1.05);
+    let total = pad * 2;
+    const linhas = blocos.map(([tipo, txt], i) => {
+      c.font = tipo === 'dia' ? `800 ${s * 1.14}px "Saira SemiCond"` : `${tipo === 'imp' ? 700 : 400} ${s}px "Atkinson DC"`;
       const l = quebrar(c, txt, larg);
-      const lh = tipo === 'dia' ? s * 1.3 : s * 1.32;
-      const hh = l.length * lh + (tipo === 'dia' ? 6 : 22);
+      const lh = tipo === 'dia' ? s * 1.28 : s * 1.34;
+      const depois = i === blocos.length - 1 ? 0 : (tipo === 'dia' ? s * 0.25 : s * 0.75);
+      const hh = l.length * lh + depois;
       total += hh;
       return { tipo, l, lh, hh };
     });
-    return { total, res };
+    return {
+      h: total - s * 0.3,
+      desenhar(y) {
+        c.save(); rr(c, X, y, L, this.h, 44); c.fillStyle = 'rgba(255,255,255,0.95)'; c.fill(); c.restore();
+        let yy = y + pad;
+        c.textAlign = 'center';
+        for (const b of linhas) {
+          c.fillStyle = b.tipo === 'dia' ? '#1B5FE0' : '#16123D';
+          c.font = b.tipo === 'dia' ? `800 ${s * 1.14}px "Saira SemiCond"` : `${b.tipo === 'imp' ? 700 : 400} ${s}px "Atkinson DC"`;
+          b.l.forEach((l, i) => c.fillText(l, w / 2, yy + s * 0.95 + i * b.lh));
+          yy += b.hh;
+        }
+        c.textAlign = 'left';
+      },
+    };
   };
-  let tam = 0, medidas = null;
-  for (const comImp of [true, false]) {
-    const blocos = montar(comImp);
-    for (let s2 = vertical ? 44 : 38; s2 >= 24; s2 -= 2) {
-      const m = medir(blocos, s2);
-      if (m.total <= painelMax) { tam = s2; medidas = m; break; }
-    }
-    if (medidas) break;
-  }
-  if (!medidas) { tam = 24; medidas = medir(montar(false), 24); }
-  const ph = Math.min(painelMax, medidas.total);
-  c.save();
-  rr(c, 64, y, w - 128, ph, 48);
-  c.fillStyle = 'rgba(255,255,255,0.95)'; c.fill();
-  c.restore();
-  let yy = y + 36;
-  c.textAlign = 'center';
-  for (const b of medidas.res) {
-    c.fillStyle = b.tipo === 'dia' ? '#1B5FE0' : '#16123D';
-    c.font = b.tipo === 'dia' ? `800 ${tam * 1.12}px "Saira SemiCond"` : `${b.tipo === 'imp' ? 700 : 400} ${tam}px "Atkinson DC"`;
-    b.l.forEach((l, i) => c.fillText(l, w / 2, yy + tam + i * b.lh));
-    yy += b.hh;
-  }
-  y += ph;
-  if (vig) {
-    c.fillStyle = n.texto;
-    c.font = `700 ${vertical ? 32 : 28}px "Atkinson DC"`;
-    const r = ajustar(c, vig, (s) => `700 ${s}px "Atkinson DC"`, w - 128, 1, vertical ? 32 : 28, 20);
-    c.font = `700 ${r.s}px "Atkinson DC"`;
-    c.fillText(vig, w / 2, y + 42);
-  }
-  c.textAlign = 'left';
-  y += vigH + 20;
 
-  if (fenH) {
-    const larg2 = (w - 128) / fenoms.length;
-    for (let i = 0; i < fenoms.length; i++) {
-      const f = FENOMENOS[fenoms[i]];
-      const im = await imagem(`assets/icons/${f.icone}.svg`);
-      const cx = 64 + larg2 * i + larg2 / 2;
-      c.save(); c.beginPath(); c.arc(cx, y + 50, 56, 0, Math.PI * 2); c.fillStyle = 'rgba(255,255,255,0.88)'; c.fill(); c.restore();
-      if (im) c.drawImage(im, cx - 40, y + 10, 80, 80);
-      c.fillStyle = n.texto; c.textAlign = 'center'; c.font = '700 28px "Atkinson DC"';
-      c.fillText(f.nome, cx, y + 140); c.textAlign = 'left';
+  // ---------- blocos opcionais
+  const fenoms = (alerta.fenomenos || []).filter((f) => FENOMENOS[f]).slice(0, 4);
+  const icones = await Promise.all(fenoms.map((f) => imagem(`assets/icons/${FENOMENOS[f].icone}.svg`)));
+  const raioF = vertical ? 62 : 50;
+  const blocoFen = fenoms.length ? {
+    h: raioF * 2 + (vertical ? 56 : 48),
+    desenhar(y) {
+      const col = L / fenoms.length;
+      fenoms.forEach((f, i) => {
+        const cx = X + col * i + col / 2;
+        c.save(); c.beginPath(); c.arc(cx, y + raioF, raioF, 0, Math.PI * 2); c.fillStyle = 'rgba(255,255,255,0.9)'; c.fill(); c.restore();
+        if (icones[i]) c.drawImage(icones[i], cx - raioF * 0.72, y + raioF * 0.28, raioF * 1.44, raioF * 1.44);
+        c.fillStyle = n.texto; c.textAlign = 'center'; c.font = `700 ${vertical ? 30 : 26}px "Atkinson DC"`;
+        c.fillText(FENOMENOS[f].nome, cx, y + raioF * 2 + (vertical ? 42 : 36)); c.textAlign = 'left';
+      });
+    },
+  } : null;
+
+  const todasDicas = dicasDoAlerta(alerta);
+  const blocoDicas = (qtd) => {
+    const s = vertical ? 34 : 29;
+    const lista = todasDicas.slice(0, qtd);
+    c.font = `400 ${s}px "Atkinson DC"`;
+    const quebradas = lista.map((d) => quebrar(c, d, L - 130));
+    const pad = vertical ? 34 : 28;
+    const cab = vertical ? 58 : 48;
+    const corpo = quebradas.reduce((a, l) => a + l.length * s * 1.3 + s * 0.45, 0) - s * 0.45;
+    return {
+      h: pad * 2 + cab + corpo,
+      desenhar(y) {
+        c.save(); rr(c, X, y, L, this.h, 40);
+        const g = c.createLinearGradient(X, y, X + L, y + this.h);
+        g.addColorStop(0, 'rgba(43,29,181,0.88)'); g.addColorStop(1, 'rgba(18,11,84,0.92)');
+        c.fillStyle = g; c.fill(); c.strokeStyle = 'rgba(255,255,255,0.3)'; c.lineWidth = 2; c.stroke(); c.restore();
+        c.fillStyle = '#FFD24A'; c.font = `800 ${vertical ? 44 : 38}px "Saira SemiCond"`;
+        c.fillText('O que fazer', X + 40, y + pad + (vertical ? 38 : 32));
+        let yy = y + pad + cab;
+        quebradas.forEach((linhas) => {
+          c.fillStyle = '#FFD24A';
+          c.beginPath(); c.arc(X + 52, yy + s * 0.62, 8, 0, Math.PI * 2); c.fill();
+          c.fillStyle = '#FFFFFF'; c.font = `400 ${s}px "Atkinson DC"`;
+          linhas.forEach((l, i) => c.fillText(l, X + 80, yy + s * 0.95 + i * s * 1.3));
+          yy += linhas.length * s * 1.3 + s * 0.45;
+        });
+      },
+    };
+  };
+
+  // ---------- encaixe: maior letra que couber, depois opcionais, depois espaço igual
+  const disponivel = limite - topo;
+  const soma = (bs) => bs.reduce((a, b) => a + b.h, 0) + gapMin * (bs.length - 1);
+  // Prioridade: letra do texto confortável (alvo) > manter "Podem ocorrer" > título grande.
+  const alvo = vertical ? 40 : 32;
+  let escolhido = null, melhor = null;
+  for (const fator of [1, 0.86, 0.74]) {
+    const tb = tituloBloco(fator);
+    for (const comImp of [true, false]) {
+      let achou = null;
+      for (let s = vertical ? 50 : 42; s >= 24; s -= 2) {
+        const p = painel(montar(comImp), s);
+        if (soma([blocoSelo, tb, p, blocoVig].filter(Boolean)) <= disponivel) { achou = { p, s, tb }; break; }
+      }
+      if (achou && (!melhor || achou.s > melhor.s)) melhor = achou;
+      if (achou && achou.s >= alvo) { escolhido = achou; break; }
     }
-    y += fenH + 10;
+    if (escolhido) break;
   }
-  pilulaContatos(c, w, rodapeY - contatosH - 26, contatosH);
+  escolhido = escolhido || melhor || { p: painel(montar(false), 24), s: 24, tb: tituloBloco(0.74) };
+  const fixos = (p) => [blocoSelo, escolhido.tb, p, blocoVig].filter(Boolean);
+  const blocos = fixos(escolhido.p);
+  if (blocoFen && soma([...blocos, blocoFen]) <= disponivel) blocos.push(blocoFen);
+  for (let q = todasDicas.length; q >= 1; q--) {
+    const d = blocoDicas(q);
+    if (soma([...blocos, d]) <= disponivel) { blocos.push(d); break; }
+  }
+  const sobra = disponivel - blocos.reduce((a, b) => a + b.h, 0);
+  const gap = Math.min(gapMax, sobra / (blocos.length + 1));
+  let y = topo + (sobra - gap * (blocos.length - 1)) / 2;
+  for (const b of blocos) { b.desenhar(y); y += b.h + gap; }
+
+  pilulaContatos(c, w, contatosY, contatosH);
   await rodape(c, w, h, url);
 }
 

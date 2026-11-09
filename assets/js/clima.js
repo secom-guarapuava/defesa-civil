@@ -156,8 +156,9 @@ export async function carregarClima(base = '') {
   if (valido) return { ...arquivo, origem: 'robo', idadeMin };
   try {
     const vivo = await buscarOpenMeteo();
-    vivo.avisos_inmet = (arquivo?.avisos_inmet || []).filter((a) => !a.fim || new Date(a.fim) > new Date());
-    if (arquivo?.fontes?.inmet) vivo.fontes.inmet = arquivo.fontes.inmet;
+    const real = arquivo && !arquivo.exemplo;
+    vivo.avisos_inmet = real ? (arquivo.avisos_inmet || []).filter((a) => !a.fim || new Date(a.fim) > new Date()) : [];
+    if (real && arquivo.fontes?.inmet) vivo.fontes.inmet = arquivo.fontes.inmet;
     return { ...vivo, origem: 'ao-vivo', idadeMin: 0 };
   } catch (e) {
     console.warn(e);
@@ -168,6 +169,19 @@ export async function carregarClima(base = '') {
 
 export async function carregarAlerta(base = '') {
   try { return await getJSON(`${base}data/alerta.json`); } catch { return { ativo: false }; }
+}
+
+// Fenômenos a partir do texto de um aviso do INMET (para ícones e dicas)
+export function fenomenosDoTexto(txt) {
+  const t = (txt || '').toLowerCase();
+  const f = [];
+  if (/chuva|tempestade|acumulado/.test(t)) f.push('chuva-forte');
+  if (/vento|vendaval|rajada/.test(t)) f.push('rajadas');
+  if (/tempestade|raio|descarga/.test(t)) f.push('raios');
+  if (/granizo/.test(t)) f.push('granizo');
+  if (/acumulado|alagamento|inunda/.test(t) && f.length < 4) f.push('alagamentos');
+  if (/nevoeiro|neblina/.test(t)) f.push('neblina');
+  return f.slice(0, 4);
 }
 
 // ---------------------------------------------------------------- alerta em vigor
@@ -191,6 +205,7 @@ export function alertaVigente(alerta, clima, agora = new Date()) {
       const a = avisos.sort((x, y) => (NIVEIS[y.nivel]?.ordem || 0) - (NIVEIS[x.nivel]?.ordem || 0))[0];
       const ini = a.inicio ? new Date(a.inicio) : null;
       return {
+        fenomenos: fenomenosDoTexto(`${a.evento} ${Array.isArray(a.riscos) ? a.riscos.join(' ') : a.riscos || ''}`),
         origem: 'inmet', nivel: a.nivel || 'moderado', titulo: `${a.evento}`,
         resumo: Array.isArray(a.riscos) ? a.riscos.join(' ') : (a.riscos || ''),
         instrucoes: Array.isArray(a.instrucoes) ? a.instrucoes : (a.instrucoes ? [a.instrucoes] : []),

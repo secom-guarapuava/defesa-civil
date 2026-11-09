@@ -8,7 +8,7 @@ Site de apoio para a população e para os servidores acompanharem o tempo em Gu
 - **Compartilhar no WhatsApp**: gera a arte (status 9:16 ou post 4:5) do alerta, do tempo agora ou da previsão, com legenda pronta. Também dá para mandar só o texto.
 - **Boletim em PDF** de Guarapuava, refeito a cada atualização.
 - **El Niño**: seção explicando por que está chovendo mais.
-- **Orientações** (antes, durante e depois), kit de emergência, **cartilha em PDF**, canais de alerta e telefones.
+- **Orientações** (antes, durante e depois), kit de emergência, **Cartilha de Segurança — Plano de Ação El Niño** em PDF, canais de alerta e telefones.
 - **Painel** (`painel.html`) para deixar aberto nos computadores da equipe, com relógio, aviso sonoro e notificação quando o alerta muda.
 - **Gestão** (`gerenciar.html`) para a equipe publicar o alerta e baixar a arte pronta.
 
@@ -30,7 +30,7 @@ Depois disso, o robô roda sozinho a cada 30 minutos (e a cada alteração no re
 - `github.usuario` e `github.repositorio`: para a página de gestão já vir preenchida.
 - `contatos`, `canalWhatsApp`, links: tudo que aparece no site e nas artes.
 
-> Os telefones também aparecem no boletim em PDF (`scripts/gerar_boletim.py`, função `pagina_2`) e na cartilha (`scripts/cartilha/cartilha.html`). Se mudar um número, mude nos três.
+> Os telefones também aparecem no boletim em PDF (`scripts/gerar_boletim.py`, função `pagina_2`). Se mudar um número, mude nos dois.
 
 ### Domínio próprio (opcional)
 Para usar algo como `defesacivil.guarapuava.pr.gov.br`: em *Settings → Pages → Custom domain*, informe o domínio e peça à TI um registro **CNAME** apontando para `SEU-USUARIO.github.io`. Depois troque o `og:image` do `index.html` pelo endereço completo da imagem (o WhatsApp só mostra a miniatura com endereço completo).
@@ -109,8 +109,8 @@ assets/js/config.js     contatos, links e configurações
 assets/js/clima.js      dados, níveis de risco e alertas
 assets/js/ceu.js        céu animado
 assets/js/arte.js       modelos das artes para WhatsApp/Instagram
-assets/docs/            cartilha em PDF
-scripts/                robô de atualização, boletim, ícones e cartilha
+assets/docs/            cartilha em PDF (para trocar, substitua o arquivo mantendo o mesmo nome)
+scripts/                robô de atualização, boletim e ícones
 .github/workflows/      agenda do robô (a cada 30 min)
 ```
 

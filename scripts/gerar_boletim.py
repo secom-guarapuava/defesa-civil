@@ -110,6 +110,15 @@ def fmt_quando(d: datetime) -> str:
     return f"{DIAS_CURTOS[d.weekday()]} {d.strftime('%d/%m')} às {d.strftime('%Hh%M').replace('h00', 'h')}"
 
 
+def fmt_vigencia(ini: datetime, fim: datetime) -> str:
+    """Dias inteiros (00h00 a 23h59) aparecem como nos boletins do SIMEPAR: "de sex 06/11 a sáb 07/11"."""
+    if ini.strftime("%H:%M") == "00:00" and fim.strftime("%H:%M") == "23:59":
+        a = f"{DIAS_CURTOS[ini.weekday()]} {ini.strftime('%d/%m')}"
+        b = f"{DIAS_CURTOS[fim.weekday()]} {fim.strftime('%d/%m')}"
+        return f"{a} (o dia todo)" if ini.date() == fim.date() else f"de {a} a {b}"
+    return f"{fmt_quando(ini)} até {fmt_quando(fim)}"
+
+
 def alerta_vigente(alerta: dict, agora: datetime):
     if not alerta or not alerta.get("ativo"):
         return None
@@ -198,7 +207,7 @@ def bloco_alerta(c, y, alerta, avisos_inmet):
         ini, fim = dt(alerta.get("inicio")), dt(alerta.get("fim"))
         c.drawString(x + 6 * mm, y - 8 * mm, f"ALERTA {n['faixa'].upper()}  ·  {n['nome'].upper()}")
         if ini and fim:
-            c.drawRightString(x + larg - 6 * mm, y - 8 * mm, f"Vigência: {fmt_quando(ini)} até {fmt_quando(fim)}")
+            c.drawRightString(x + larg - 6 * mm, y - 8 * mm, f"Vigência: {fmt_vigencia(ini, fim)}")
         yy = y - 13 * mm
         for (tipo, t, s), h in zip(partes, alturas):
             paragrafo(c, t, x + 6 * mm, yy, larg - 12 * mm, s)
@@ -225,7 +234,7 @@ def bloco_alerta(c, y, alerta, avisos_inmet):
         ini, fim = dt(a.get("inicio")), dt(a.get("fim"))
         c.setFont("Texto", 9)
         if ini and fim:
-            c.drawString(x + 9 * mm, y - 20.5 * mm, f"Vigência: {fmt_quando(ini)} até {fmt_quando(fim)}  ·  {a.get('link', '')}")
+            c.drawString(x + 9 * mm, y - 20.5 * mm, f"Vigência: {fmt_vigencia(ini, fim)}  ·  {a.get('link', '')}")
         return y - h - 6 * mm
 
     h = 17 * mm

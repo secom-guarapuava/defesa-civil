@@ -2,7 +2,7 @@
 import { CONFIG } from './config.js';
 import { NIVEIS, gradCSS, iconeURL, estadoCeu, carregarClima, carregarAlerta, alertaVigente, simulacao, aplicarSimulacao } from './clima.js';
 import { Ceu } from './ceu.js';
-import { $, esc, fmtData, fmtHora, fmtQuando, graus, mm, num, nomeDoDia, diaSemana, relativo, partes, duracao, ler, guardar } from './util.js';
+import { $, esc, fmtData, fmtHora, fmtQuando, fmtVigencia, graus, mm, num, nomeDoDia, diaSemana, relativo, partes, duracao, ler, guardar } from './util.js';
 
 const ceu = new Ceu($('#ceu'), { economia: true });
 const sim = simulacao();
@@ -78,7 +78,7 @@ function desenharAlerta(al) {
   box.style.cssText = `--alerta-grad:${gradCSS(al.nivel)};--alerta-texto:${n.texto}`;
   box.innerHTML = `<span class="nivel">Alerta ${n.cor.toLowerCase()} · ${n.nome}</span>
     <div><h2>${esc(al.titulo)}</h2><p>${esc(al.resumo || '')}${al.origem === 'inmet' ? ' (aviso automático do INMET)' : ''}</p></div>
-    <div class="vig">${ini && fim ? `${fmtQuando(ini)}<br>até ${fmtQuando(fim)}<br>` : ''}${fim ? `<small>${ini && ini > new Date() ? `começa em ${duracao(ini - new Date())}` : `termina em ${duracao(fim - new Date())}`}</small>` : ''}</div>`;
+    <div class="vig">${ini && fim ? `${fmtVigencia(ini, fim).replace(' até ', '<br>até ').replace(' a ', '<br>a ')}<br>` : ''}${fim ? `<small>${ini && ini > new Date() ? `começa em ${duracao(ini - new Date())}` : `termina em ${duracao(fim - new Date())}`}</small>` : ''}</div>`;
 }
 
 function desenharAgora(c) {

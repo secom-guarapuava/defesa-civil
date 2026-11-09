@@ -8,7 +8,7 @@ import { Ceu } from './ceu.js';
 import { iniciarCompartilhar } from './compartilhar.js';
 import { prepararFontes } from './arte.js';
 import {
-  $, $$, esc, fmtData, fmtHora, fmtQuando, graus, mm, num, nomeDoDia, diaSemana, relativo, duracao, partes, ler, guardar,
+  $, $$, esc, fmtData, fmtHora, fmtQuando, fmtVigencia, diasInteiros, graus, mm, num, nomeDoDia, diaSemana, relativo, duracao, partes, ler, guardar,
 } from './util.js';
 
 const estado = { clima: null, alerta: null, alertaBruto: null };
@@ -72,7 +72,7 @@ function renderAlerta() {
         </div>
         <div class="vigencia">
           <h2>Vigência do alerta</h2>
-          ${ini && fim ? `<p class="periodo">${fmtQuando(ini)}<br>até ${fmtQuando(fim)}</p>` : fim ? `<p class="periodo">até ${fmtQuando(fim)}</p>` : ''}
+          ${ini && fim && diasInteiros(ini, fim) ? `<p class="periodo">${fmtVigencia(ini, fim).replace(/^de /, '').replace(' a ', '<br>a ')}</p>` : ini && fim ? `<p class="periodo">${fmtQuando(ini)}<br>até ${fmtQuando(fim)}</p>` : fim ? `<p class="periodo">até ${fmtQuando(fim)}</p>` : ''}
           ${falta ? `<p class="falta">${falta}</p>` : ''}
           ${ini && fim ? regua(ini, fim, agora) : ''}
           <p style="margin:14px 0 0;font-size:.92rem">${esc(DESCRICAO_NIVEL[al.nivel] || '')}</p>

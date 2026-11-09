@@ -642,7 +642,7 @@ def main() -> int:
         log(f"INMET ok: {len(inmet)} aviso(s) para Guarapuava")
     except Exception as e:  # noqa: BLE001
         fontes["inmet"] = {"ok": False, "erro": str(e)[:200], "em": iso(agora())}
-        inmet = [a for a in anterior.get("avisos_inmet", []) if a.get("fim") and a["fim"] > iso(agora())]
+        inmet = [] if anterior.get("exemplo") else [a for a in anterior.get("avisos_inmet", []) if a.get("fim") and a["fim"] > iso(agora())]
         log("INMET falhou (mantidos avisos anteriores ainda vigentes):", e)
 
     if not sim and not om:

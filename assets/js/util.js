@@ -37,6 +37,22 @@ export function fmtQuando(d) {
   // "seg 09/11 às 14h"
   return `${diaSemana(d, true)} ${fmtData(d)} às ${fmtHora(d)}`;
 }
+/** Vigência no padrão dos boletins: dias inteiros viram "de sex 06/11 a sáb 07/11". */
+export function diasInteiros(ini, fim) {
+  if (!ini || !fim) return false;
+  const a = partes(ini), b = partes(fim);
+  return a.hora === 0 && a.min === 0 && b.hora === 23 && b.min === 59;
+}
+export function fmtVigencia(ini, fim) {
+  ini = ini && new Date(ini); fim = fim && new Date(fim);
+  if (!ini || !fim) return fim ? `até ${fmtQuando(fim)}` : '';
+  if (diasInteiros(ini, fim)) {
+    const a = `${diaSemana(ini, true)} ${fmtData(ini)}`, b = `${diaSemana(fim, true)} ${fmtData(fim)}`;
+    return partes(ini).iso === partes(fim).iso ? `${a} (o dia todo)` : `de ${a} a ${b}`;
+  }
+  return `${fmtQuando(ini)} até ${fmtQuando(fim)}`;
+}
+
 export function nomeDoDia(dataISO, hoje = hojeISO()) {
   const d = new Date(dataISO + 'T12:00:00-03:00');
   const amanha = hojeISO(new Date(Date.now() + 864e5));

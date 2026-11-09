@@ -88,9 +88,10 @@
             <label for="f-resumo">Resumo em uma frase</label>
             <textarea id="f-resumo" maxlength="220" placeholder="Ex.: Chuva forte em pouco tempo, rajadas de vento, raios e granizo localizado."></textarea>
           </div>
+          <label style="display:flex;gap:10px;align-items:flex-start;margin-bottom:10px;font-weight:700"><input type="checkbox" id="f-dias-inteiros" checked style="width:22px;height:22px;accent-color:var(--anil)"> Vigência por dias inteiros, como no boletim do SIMEPAR (das 00h00 do primeiro dia às 23h59 do último)</label>
           <div class="duas">
-            <div class="campo"><label for="f-inicio">Início da vigência</label><input type="datetime-local" id="f-inicio" required></div>
-            <div class="campo"><label for="f-fim">Fim da vigência</label><input type="datetime-local" id="f-fim" required><small>Depois desse horário o alerta some sozinho do site.</small></div>
+            <div class="campo"><label for="f-inicio" id="rot-inicio">Primeiro dia</label><input type="date" id="f-inicio" required></div>
+            <div class="campo"><label for="f-fim" id="rot-fim">Último dia</label><input type="date" id="f-fim" required><small>Depois desse horário o alerta some sozinho do site.</small></div>
           </div>
           <fieldset class="campo">
             <legend>Fenômenos esperados</legend>

@@ -3,7 +3,7 @@ import { CONFIG } from './config.js';
 import { NIVEIS, FENOMENOS, gradCSS, carregarClima, carregarAlerta } from './clima.js';
 import { desenharArte, canvasParaArquivo } from './arte.js';
 import { textoAlerta, abrirWhatsAppTexto } from './compartilhar.js';
-import { $, $$, esc, diaSemana, partes, doisDig, ler, guardar } from './util.js';
+import { $, $$, esc, diaSemana, partes, doisDig, ler, guardar, diasInteiros } from './util.js';
 
 const IMPACTOS = ['queda de árvores', 'alagamentos', 'destelhamentos', 'enxurradas', 'transbordamento de córregos', 'queda de energia', 'deslizamentos', 'danos em plantações'];
 const form = $('#form-alerta');
@@ -30,13 +30,32 @@ function addDia(d = {}) {
 }
 const nivelAtual = () => form.querySelector('input[name="nivel"]:checked')?.value || 'alto';
 
-// datetime-local <-> ISO com -03:00
-const paraLocal = (iso) => {
+// Campos de vigência: dias inteiros (date) ou horário exato (datetime-local), sempre no fuso -03:00
+const modoDias = () => $('#f-dias-inteiros').checked;
+const paraLocal = (iso, soData) => {
   if (!iso) return '';
   const p = partes(new Date(iso));
-  return `${p.ano}-${doisDig(p.mes)}-${doisDig(p.dia)}T${doisDig(p.hora)}:${doisDig(p.min)}`;
+  const d = `${p.ano}-${doisDig(p.mes)}-${doisDig(p.dia)}`;
+  return soData ? d : `${d}T${doisDig(p.hora)}:${doisDig(p.min)}`;
 };
-const paraISO = (v) => (v ? `${v}:00-03:00` : null);
+const lerVigencia = (campo, fim) => {
+  const v = $(campo).value;
+  if (!v) return null;
+  if (modoDias()) return `${v.slice(0, 10)}T${fim ? '23:59' : '00:00'}:00-03:00`;
+  return `${v}:00-03:00`;
+};
+function aplicarModoDias() {
+  const dias = modoDias();
+  for (const [campo, fim] of [['#f-inicio', false], ['#f-fim', true]]) {
+    const el = $(campo);
+    const atual = el.value;
+    el.type = dias ? 'date' : 'datetime-local';
+    if (atual) el.value = dias ? atual.slice(0, 10) : (atual.length === 10 ? `${atual}T${fim ? '23:59' : '00:00'}` : atual);
+  }
+  $('#rot-inicio').textContent = dias ? 'Primeiro dia' : 'Início da vigência';
+  $('#rot-fim').textContent = dias ? 'Último dia' : 'Fim da vigência';
+}
+$('#f-dias-inteiros').addEventListener('change', () => { aplicarModoDias(); atualizar(); });
 
 function lerFormulario() {
   const ativo = form.ativo.value === 'sim';
@@ -45,8 +64,8 @@ function lerFormulario() {
     nivel: nivelAtual(),
     titulo: $('#f-titulo').value.trim(),
     resumo: $('#f-resumo').value.trim(),
-    inicio: paraISO($('#f-inicio').value),
-    fim: paraISO($('#f-fim').value),
+    inicio: lerVigencia('#f-inicio', false),
+    fim: lerVigencia('#f-fim', true),
     fenomenos: $$('input[name="fen"]:checked').map((i) => i.value),
     dias: $$('.dia-item').map((el) => ({ rotulo: el.querySelector('.d-rotulo').value.trim(), nivel: el.querySelector('.d-nivel').value, texto: el.querySelector('.d-texto').value.trim() })).filter((d) => d.rotulo || d.texto),
     impactos: $$('input[name="imp"]:checked').map((i) => i.value),
@@ -62,8 +81,10 @@ function preencher(a) {
   if (r) r.checked = true;
   $('#f-titulo').value = a.titulo || '';
   $('#f-resumo').value = a.resumo || '';
-  $('#f-inicio').value = paraLocal(a.inicio);
-  $('#f-fim').value = paraLocal(a.fim);
+  $('#f-dias-inteiros').checked = !a.inicio || diasInteiros(a.inicio, a.fim);
+  aplicarModoDias();
+  $('#f-inicio').value = paraLocal(a.inicio, modoDias());
+  $('#f-fim').value = paraLocal(a.fim, modoDias());
   $$('input[name="fen"]').forEach((i) => { i.checked = (a.fenomenos || []).includes(i.value); });
   $$('input[name="imp"]').forEach((i) => { i.checked = (a.impactos || []).includes(i.value); });
   $('#dias').innerHTML = '';
@@ -73,8 +94,10 @@ function preencher(a) {
 }
 
 function padrao() {
-  const ini = new Date(); ini.setMinutes(0, 0, 0);
-  const fim = new Date(ini.getTime() + 24 * 3600e3);
+  const hoje = partes(new Date());
+  const d = `${hoje.ano}-${doisDig(hoje.mes)}-${doisDig(hoje.dia)}`;
+  const ini = new Date(`${d}T00:00:00-03:00`);
+  const fim = new Date(`${d}T23:59:00-03:00`);
   preencher({
     ativo: true, nivel: 'alto', titulo: 'Risco alto de tempestades',
     resumo: 'Chuva forte em pouco tempo, rajadas de vento, raios e granizo localizado.',

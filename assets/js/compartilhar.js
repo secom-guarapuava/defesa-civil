@@ -2,7 +2,7 @@
 import { CONFIG, urlDoSite } from './config.js';
 import { NIVEIS } from './clima.js';
 import { desenharArte, canvasParaArquivo } from './arte.js';
-import { $, fmtData, fmtHora, fmtQuando, graus, mm, nomeDoDia, num } from './util.js';
+import { $, fmtData, fmtHora, fmtQuando, fmtVigencia, graus, mm, nomeDoDia, num } from './util.js';
 
 const contatoDC = () => CONFIG.contatos.find((c) => c.nome.includes('Guarapuava'));
 
@@ -23,7 +23,7 @@ export function textoAlerta(alerta, url = urlDoSite()) {
     `${n.emoji} *ALERTA ${n.cor.toUpperCase()}: ${(alerta.titulo || n.nome).toUpperCase()}*`,
     `📍 Guarapuava (PR)`,
   ];
-  if (alerta.inicio && alerta.fim) linhas.push(`🗓️ Vigência: ${fmtQuando(new Date(alerta.inicio))} até ${fmtQuando(new Date(alerta.fim))}`);
+  if (alerta.inicio && alerta.fim) linhas.push(`🗓️ Vigência: ${fmtVigencia(alerta.inicio, alerta.fim)}`);
   linhas.push('');
   if (alerta.dias?.length) alerta.dias.forEach((d) => linhas.push(`*${d.rotulo}:* ${d.texto}`, ''));
   else if (alerta.resumo) linhas.push(alerta.resumo, '');
