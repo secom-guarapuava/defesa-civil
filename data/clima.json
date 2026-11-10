@@ -7,23 +7,23 @@
   "lat": -25.3902,
   "lon": -51.4623
  },
- "gerado_em": "2026-11-10T13:17-03:00",
+ "gerado_em": "2026-11-10T13:18-03:00",
  "fontes": {
   "simepar": {
    "ok": false,
    "url": "https://www.simepar.br/simepar/forecast_by_counties/4109401",
    "erro": "403 Client Error: Forbidden for url: https://www.simepar.br/simepar/forecast_by_counties/4109401",
-   "em": "2026-11-10T13:17-03:00"
+   "em": "2026-11-10T13:18-03:00"
   },
   "openmeteo": {
    "ok": true,
    "url": "https://open-meteo.com/",
-   "em": "2026-11-10T13:17-03:00"
+   "em": "2026-11-10T13:18-03:00"
   },
   "inmet": {
    "ok": true,
    "url": "https://alertas2.inmet.gov.br/",
-   "em": "2026-11-10T13:17-03:00"
+   "em": "2026-11-10T13:18-03:00"
   }
  },
  "atual": {
