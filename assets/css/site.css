@@ -282,7 +282,7 @@ p { margin: 0 0 0.9em; max-width: 68ch; }
 .secao-cab p { color: var(--tinta-2); font-size: 1.1rem; margin: 0; }
 
 /* documentos e fontes */
-.docs { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+.docs { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
 .doc { position: relative; display: grid; gap: 10px; align-content: start; padding: 24px; border-radius: var(--r-m); background: #fff; border: 1px solid var(--linha); text-decoration: none; transition: transform .2s ease, box-shadow .2s ease; }
 .doc:hover { transform: translateY(-2px); box-shadow: 0 20px 40px -24px rgba(36, 24, 154, .45); }
 .doc .ico { width: 52px; height: 52px; border-radius: 16px; display: grid; place-items: center; color: #fff; background: var(--grad-marca); box-shadow: inset 0 1px 0 rgba(255, 255, 255, .35); }
@@ -382,6 +382,7 @@ p { margin: 0 0 0.9em; max-width: 68ch; }
 .canal .qr img { width: 100%; }
 .canal .qr small { display: block; color: #0B6B33; font-weight: 800; text-align: center; font-size: .78rem; margin-top: 6px; }
 .outros-canais { display: grid; gap: 16px; }
+.outros-canais .canal-mini:only-child { align-content: center; }
 .canal-mini { background: #fff; border: 1px solid var(--linha); border-radius: var(--r-g); padding: 22px 24px; display: grid; gap: 6px; }
 .canal-mini .grande { font-family: var(--fonte-display); font-weight: 800; font-stretch: 87.5%; font-size: 2.2rem; line-height: 1; color: var(--anil); }
 .canal-mini p { margin: 0; color: var(--tinta-2); }
@@ -396,13 +397,19 @@ p { margin: 0 0 0.9em; max-width: 68ch; }
 .contatos { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(10, minmax(0, 1fr)); gap: 14px; }
 .contatos li { grid-column: span 2; }
 .contatos li.destaque { grid-column: span 5; }
-.contato { display: grid; gap: 2px; text-decoration: none; padding: 20px 22px; border-radius: var(--r-m); height: 100%; transition: background-color .2s ease, transform .2s ease; }
+.contato { position: relative; display: grid; gap: 2px; align-content: start; padding: 20px 22px; border-radius: var(--r-m); height: 100%; transition: background-color .2s ease, transform .2s ease; }
 .contato:hover { background: rgba(255, 255, 255, .24); transform: translateY(-2px); }
-.contato .numero { font-family: var(--fonte-display); font-weight: 800; font-stretch: 87.5%; font-size: 1.8rem; line-height: 1.05; }
+.contato .numero { font-family: var(--fonte-display); font-weight: 800; font-stretch: 87.5%; font-size: 1.8rem; line-height: 1.05; text-decoration: none; color: inherit; }
+.contato .numero::after { content: ''; position: absolute; inset: 0; border-radius: inherit; }
+.contato .numero:focus-visible { outline: none; }
+.contato:has(.numero:focus-visible) { outline: 3px solid #FFC93C; outline-offset: 3px; }
+.acoes-contato { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-top: 8px; }
+.whats-contato { position: relative; z-index: 1; display: inline-flex; gap: 6px; align-items: center; padding: 6px 14px; border-radius: 999px; background: var(--grad-whats); color: #fff; font-weight: 800; font-size: .85rem; text-decoration: none; box-shadow: inset 0 1px 0 rgba(255, 255, 255, .35); }
+.whats-contato:hover { filter: brightness(1.08); }
 .destaque .contato .numero { font-size: clamp(2.2rem, 1.6rem + 2vw, 3.2rem); }
 .contato .nome { font-weight: 800; }
 .contato .det { font-size: .9rem; opacity: .85; }
-.contato .ligar { margin-top: 8px; font-size: .85rem; font-weight: 800; display: inline-flex; gap: 6px; align-items: center; opacity: .95; }
+.contato .ligar { font-size: .85rem; font-weight: 800; display: inline-flex; gap: 6px; align-items: center; opacity: .95; }
 @media (max-width: 960px) { .contatos { grid-template-columns: repeat(2, minmax(0, 1fr)); } .contatos li { grid-column: span 1; } .contatos li.destaque { grid-column: span 2; } }
 @media (max-width: 520px) { .contatos { grid-template-columns: 1fr; } .contatos li, .contatos li.destaque { grid-column: auto; } }
 
@@ -424,10 +431,12 @@ p { margin: 0 0 0.9em; max-width: 68ch; }
 
 /* ---------------------------------------------------------------- barra fixa do celular */
 .barra-celular { position: fixed; z-index: 60; left: 50%; bottom: max(12px, env(safe-area-inset-bottom)); transform: translateX(-50%); display: none; gap: 6px; padding: 6px; border-radius: 999px; width: min(100% - 20px, 460px); background: rgba(22, 16, 80, .55); }
-.barra-celular a, .barra-celular button { flex: 1; display: grid; justify-items: center; gap: 1px; padding: 8px 6px; border-radius: 999px; border: 0; background: transparent; color: #fff; text-decoration: none; font-weight: 800; font-size: .78rem; cursor: pointer; }
-.barra-celular svg { width: 22px; height: 22px; }
+.barra-celular a { flex: 1; display: flex; align-items: center; justify-content: center; gap: 10px; padding: 9px 12px; border-radius: 999px; color: #fff; text-decoration: none; box-shadow: inset 0 1px 0 rgba(255, 255, 255, .35); }
+.barra-celular a span { display: grid; font-size: .74rem; font-weight: 700; line-height: 1.15; opacity: .95; }
+.barra-celular a b { font-size: .98rem; font-weight: 800; }
+.barra-celular svg { width: 24px; height: 24px; flex: none; }
 .barra-celular .ligar { background: linear-gradient(135deg, #FF6B6B, #D9202E); }
-.barra-celular .canal-b { background: var(--grad-whats); }
+.barra-celular .whats-b { background: var(--grad-whats); }
 @media (max-width: 760px) { .barra-celular { display: flex; } }
 
 /* ---------------------------------------------------------------- diálogo de compartilhar */

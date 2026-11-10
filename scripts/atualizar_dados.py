@@ -1,4 +1,4 @@
-"""Coleta o tempo de Guarapuava e grava data/clima.json (+ boletim em PDF).
+"""Coleta o tempo de Guarapuava e grava data/clima.json.
 
 Fontes, em ordem de prioridade:
   1. SIMEPAR  - previsão oficial por município (página forecast_by_counties/4109401)
@@ -17,7 +17,6 @@ import math
 import os
 import re
 import sys
-import traceback
 import xml.etree.ElementTree as ET
 from datetime import date, datetime, timedelta, timezone
 
@@ -25,7 +24,6 @@ import requests
 
 RAIZ = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 ARQ_CLIMA = os.path.join(RAIZ, "data", "clima.json")
-ARQ_ALERTA = os.path.join(RAIZ, "data", "alerta.json")
 
 IBGE = 4109401
 LAT, LON = -25.3902, -51.4623
@@ -661,20 +659,6 @@ def main() -> int:
         json.dump(dados, f, ensure_ascii=False, indent=1)
     log("Gravado", ARQ_CLIMA)
 
-    # Boletim em PDF (não interrompe se falhar)
-    try:
-        sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-        from gerar_boletim import gerar_boletim
-
-        alerta = {}
-        if os.path.exists(ARQ_ALERTA):
-            with open(ARQ_ALERTA, encoding="utf-8") as f:
-                alerta = json.load(f)
-        caminho = gerar_boletim(dados, alerta)
-        log("Boletim gerado:", caminho)
-    except Exception:  # noqa: BLE001
-        log("Falha ao gerar boletim:")
-        traceback.print_exc()
     return 0
 
 

@@ -1,5 +1,5 @@
 // =====================================================================================
-//  CONFIGURAÇÕES DO SITE — é aqui que a equipe muda contatos, links e o repositório.
+//  CONFIGURAÇÕES DO SITE — é aqui que a equipe muda contatos, links e a senha da equipe.
 // =====================================================================================
 export const CONFIG = {
   municipio: 'Guarapuava',
@@ -21,10 +21,11 @@ export const CONFIG = {
     prefeitura: 'https://www.guarapuava.pr.gov.br/',
   },
 
-  // Contatos exibidos no site, no boletim e nas artes (ordem = ordem na tela)
+  // Contatos exibidos no site e nas artes (ordem = ordem na tela).
+  // "whatsapp" (opcional): número com DDI e DDD, só dígitos, para abrir a conversa direto.
   contatos: [
     { numero: '193', tel: '193', nome: 'Corpo de Bombeiros', detalhe: 'Emergências, resgates, incêndios', destaque: true },
-    { numero: '(42) 98427-0618', tel: '+5542984270618', nome: 'Defesa Civil de Guarapuava', detalhe: 'Plantão 24 horas', destaque: true },
+    { numero: '(42) 98427-0618', tel: '+5542984270618', whatsapp: '5542984270618', nome: 'Defesa Civil de Guarapuava', detalhe: 'Plantão 24 horas, ligação ou WhatsApp', destaque: true },
     { numero: '199', tel: '199', nome: 'Defesa Civil', detalhe: 'Linha de emergência' },
     { numero: '192', tel: '192', nome: 'SAMU', detalhe: 'Urgência médica' },
     { numero: '190', tel: '190', nome: 'Polícia Militar', detalhe: 'Segurança' },
@@ -32,15 +33,14 @@ export const CONFIG = {
     { numero: '0800 200 0115', tel: '08002000115', nome: 'Sanepar', detalhe: 'Água e esgoto, 24 horas' },
   ],
 
-  alertasCelular: {
-    sms: '40199',
-    whatsappNacional: '(61) 2034-4611',
-    whatsappNacionalLink: 'https://wa.me/556120344611?text=oi',
-  },
+  // WhatsApp do plantão da Defesa Civil (botão verde na barra do celular)
+  whatsappPlantao: '5542984270618',
 
-  // Repositório no GitHub — usado pela página "gerenciar.html" para publicar alertas.
-  // Preencha com o seu usuário/organização e o nome do repositório.
-  github: { usuario: '', repositorio: '', ramo: 'main' },
+  alertasCelular: { sms: '40199' },
+
+  // Senha da página da equipe (gerenciar.html). Não é a senha em si: é uma "impressão digital"
+  // dela. Para trocar, entre na página da equipe e use "Trocar a senha da equipe".
+  senhaEquipe: { sal: '9cdd4f9ca5c144ee7990941aebd727ed', hash: '4ba41ecffb216db11e76f98345de7320bf3939a74deabe2890b031c98415c027', iteracoes: 150000 },
 
   // Se não houver alerta da Defesa Civil, mostrar avisos do INMET que incluem Guarapuava?
   usarAvisosINMET: true,

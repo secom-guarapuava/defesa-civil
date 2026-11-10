@@ -1,16 +1,13 @@
-"""Gera o conjunto de ícones de tempo (SVG) usados no site, nas artes e no boletim.
+"""Gera o conjunto de ícones de tempo (SVG) usados no site e nas artes.
 
 Uso: python scripts/gerar_icones.py
-Saída: assets/icons/*.svg e scripts/recursos/icones/*.png (para o PDF do boletim).
+Saída: assets/icons/*.svg
 Só precisa rodar de novo se você alterar o desenho dos ícones.
 """
 import os
-import shutil
-import subprocess
 
 RAIZ = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DEST_SVG = os.path.join(RAIZ, "assets", "icons")
-DEST_PNG = os.path.join(RAIZ, "scripts", "recursos", "icones")
 
 DEFS = """<defs>
 <radialGradient id="sol" cx="40%" cy="38%" r="70%"><stop offset="0" stop-color="#FFE680"/><stop offset="1" stop-color="#FFB21E"/></radialGradient>
@@ -105,8 +102,6 @@ ICONES = {
 
 def main():
     os.makedirs(DEST_SVG, exist_ok=True)
-    os.makedirs(DEST_PNG, exist_ok=True)
-    tem_rsvg = shutil.which("rsvg-convert") is not None
     for nome, corpo in ICONES.items():
         svg = (
             '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">'
@@ -116,11 +111,6 @@ def main():
         caminho = os.path.join(DEST_SVG, f"{nome}.svg")
         with open(caminho, "w", encoding="utf-8") as f:
             f.write(svg)
-        if tem_rsvg:
-            subprocess.run(
-                ["rsvg-convert", "-w", "256", "-h", "256", caminho, "-o", os.path.join(DEST_PNG, f"{nome}.png")],
-                check=True,
-            )
     print(f"{len(ICONES)} ícones gerados.")
 
 

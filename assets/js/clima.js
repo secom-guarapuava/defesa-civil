@@ -1,6 +1,6 @@
 // Dados do tempo, níveis de risco e alertas — compartilhado entre site, painel e gestão.
 import { CONFIG } from './config.js';
-import { hojeISO, partes } from './util.js';
+import { hojeISO } from './util.js';
 
 // ---------------------------------------------------------------- condições do tempo
 export const CONDICOES = {
@@ -216,48 +216,4 @@ export function alertaVigente(alerta, clima, agora = new Date()) {
     }
   }
   return null;
-}
-
-// ---------------------------------------------------------------- modo demonstração
-// Ex.: index.html?simular=tempestade&alerta=muito-alto  (útil para treinar a equipe e testar artes)
-export function simulacao() {
-  const q = new URLSearchParams(location.search);
-  const ceu = q.get('simular');
-  const nivel = q.get('alerta');
-  if (!ceu && !nivel) return null;
-  return { ceu, nivel };
-}
-
-export function aplicarSimulacao(clima, alerta, sim) {
-  if (!sim) return { clima, alerta };
-  const c = structuredClone(clima || {});
-  if (sim.ceu) {
-    const mapa = {
-      sol: ['limpo', true, 'Céu limpo'], 'poucas-nuvens': ['poucas-nuvens', true, 'Parcialmente nublado'],
-      noite: ['limpo', false, 'Céu limpo'], nublado: ['nublado', true, 'Nublado'], neblina: ['neblina', true, 'Neblina'],
-      garoa: ['garoa', true, 'Garoa'], chuva: ['chuva', true, 'Chuva moderada'], 'chuva-forte': ['chuva-forte', true, 'Chuva forte'],
-      tempestade: ['tempestade', true, 'Tempestade'], granizo: ['granizo', true, 'Tempestade com granizo'],
-    };
-    const [cond, dia, desc] = mapa[sim.ceu] || mapa.chuva;
-    c.atual = { ...(c.atual || {}), condicao: cond, dia, descricao: desc };
-  }
-  let a = alerta;
-  if (sim.nivel && NIVEIS[sim.nivel]) {
-    const ini = new Date(); ini.setMinutes(0, 0, 0);
-    const fim = new Date(ini.getTime() + 36 * 3600e3);
-    const p0 = partes(ini), p1 = partes(fim);
-    const nomes = { baixo: 'Risco baixo de temporais', moderado: 'Risco moderado de temporais', alto: 'Risco alto de tempestades', 'muito-alto': 'Risco muito alto de tempestades severas' };
-    a = {
-      ativo: true, nivel: sim.nivel, titulo: nomes[sim.nivel],
-      resumo: 'Chuva forte em pouco tempo, rajadas de vento, raios e granizo localizado.',
-      inicio: ini.toISOString(), fim: fim.toISOString(), fenomenos: ['chuva-forte', 'rajadas', 'raios', 'granizo'],
-      dias: [
-        { rotulo: `Hoje (${String(p0.dia).padStart(2, '0')}/${String(p0.mes).padStart(2, '0')})`, nivel: sim.nivel, texto: 'Principalmente a partir do início da tarde, há previsão de chuva forte em pouco tempo, rajadas de vento, raios e granizo localizado.' },
-        { rotulo: `Amanhã (${String(p1.dia).padStart(2, '0')}/${String(p1.mes).padStart(2, '0')})`, nivel: sim.nivel, texto: 'Há risco de tempestades severas, com chuva forte, rajadas de vento intensas, raios e granizo.' },
-      ],
-      impactos: ['queda de árvores', 'alagamentos', 'destelhamentos'],
-      fonte: 'SIMULAÇÃO — não é um alerta real',
-    };
-  }
-  return { clima: c, alerta: a };
 }

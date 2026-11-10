@@ -1,11 +1,10 @@
 // Painel de monitoramento para deixar aberto nos computadores da equipe.
 import { CONFIG } from './config.js';
-import { NIVEIS, gradCSS, iconeURL, estadoCeu, carregarClima, carregarAlerta, alertaVigente, simulacao, aplicarSimulacao } from './clima.js';
+import { NIVEIS, gradCSS, iconeURL, estadoCeu, carregarClima, carregarAlerta, alertaVigente } from './clima.js';
 import { Ceu } from './ceu.js';
 import { $, esc, fmtData, fmtHora, fmtQuando, fmtVigencia, graus, mm, num, nomeDoDia, diaSemana, relativo, partes, duracao, ler, guardar } from './util.js';
 
 const ceu = new Ceu($('#ceu'), { economia: true });
-const sim = simulacao();
 let proxima = Date.now();
 let somAtivo = ler('painel-som', false);
 let audio = null;
@@ -151,8 +150,7 @@ let ultimo = null;
 async function atualizar() {
   proxima = Date.now() + CONFIG.atualizarACadaMin * 60e3;
   try {
-    let [clima, alerta] = await Promise.all([carregarClima(), carregarAlerta()]);
-    if (sim) ({ clima, alerta } = aplicarSimulacao(clima, alerta, sim));
+    const [clima, alerta] = await Promise.all([carregarClima(), carregarAlerta()]);
     const al = alertaVigente(alerta, clima);
     ultimo = clima;
     desenharAlerta(al);
@@ -161,7 +159,7 @@ async function atualizar() {
     desenharDias(clima);
     desenharAvisos(clima);
     desenharRodape(clima);
-    if (!sim) avisarMudanca(al);
+    avisarMudanca(al);
   } catch (e) {
     console.error(e);
     $('#p-atualizacao').textContent = 'Sem conexão com os dados. Tentando de novo em instantes.';

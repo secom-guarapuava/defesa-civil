@@ -2,17 +2,14 @@
 import { CONFIG } from './config.js';
 import {
   NIVEIS, FENOMENOS, DESCRICAO_NIVEL, gradCSS, iconeURL, estadoCeu,
-  carregarClima, carregarAlerta, alertaVigente, simulacao, aplicarSimulacao,
+  carregarClima, carregarAlerta, alertaVigente,
 } from './clima.js';
 import { Ceu } from './ceu.js';
-import { iniciarCompartilhar } from './compartilhar.js';
-import { prepararFontes } from './arte.js';
 import {
   $, $$, esc, fmtData, fmtHora, fmtQuando, fmtVigencia, diasInteiros, graus, mm, num, nomeDoDia, diaSemana, relativo, duracao, partes, ler, guardar,
 } from './util.js';
 
 const estado = { clima: null, alerta: null, alertaBruto: null };
-const sim = simulacao();
 const ceu = new Ceu($('#ceu'));
 
 // ------------------------------------------------------------------ links da config
@@ -20,7 +17,9 @@ const LINKS = {
   canal: CONFIG.canalWhatsApp,
   simepar: CONFIG.links.simepar,
   defesaCivilPR: CONFIG.links.defesaCivilPR,
-  whatsNacional: CONFIG.alertasCelular.whatsappNacionalLink,
+  inmet: CONFIG.links.inmetAvisos,
+  prefeitura: CONFIG.links.prefeitura,
+  whatsPlantao: `https://wa.me/${CONFIG.whatsappPlantao}`,
 };
 $$('[data-link]').forEach((a) => { a.href = LINKS[a.dataset.link] || a.href; });
 
@@ -64,10 +63,9 @@ function renderAlerta() {
           <h1>${esc(al.titulo || n.nome)}</h1>
           ${al.resumo ? `<p class="resumo">${esc(al.resumo)}</p>` : ''}
           ${fenomenos.length ? `<ul class="fenomenos" aria-label="Fenômenos esperados">${fenomenos.map((f) => `<li><img src="assets/icons/${FENOMENOS[f].icone}.svg" alt="">${FENOMENOS[f].nome}</li>`).join('')}</ul>` : ''}
-          <div class="alerta-acoes">
-            <button class="btn btn-alerta" type="button" data-compartilhar="alerta"><svg aria-hidden="true"><use href="#i-compartilhar"/></svg>Compartilhar alerta</button>
-            ${temDetalhes ? '<button class="btn btn-alerta-2" type="button" id="btn-detalhes" aria-expanded="false" aria-controls="alerta-dias">Ver detalhes por dia</button>' : ''}
-          </div>
+          ${temDetalhes ? `<div class="alerta-acoes">
+            <button class="btn btn-alerta" type="button" id="btn-detalhes" aria-expanded="false" aria-controls="alerta-dias">Ver detalhes por dia</button>
+          </div>` : ''}
           <p class="origem">${origem}</p>
         </div>
         <div class="vigencia">
@@ -267,12 +265,15 @@ function renderFontes() {
 function renderContatos() {
   $('#lista-contatos').innerHTML = CONFIG.contatos.map((c) => `
     <li class="${c.destaque ? 'destaque' : ''}">
-      <a class="contato vidro" href="tel:${c.tel}">
+      <div class="contato vidro">
         <span class="nome">${esc(c.nome)}</span>
-        <span class="numero">${esc(c.numero)}</span>
+        <a class="numero" href="tel:${c.tel}" aria-label="Ligar para ${esc(c.nome)}: ${esc(c.numero)}">${esc(c.numero)}</a>
         <span class="det">${esc(c.detalhe || '')}</span>
-        <span class="ligar"><svg width="16" height="16" aria-hidden="true"><use href="#i-telefone"/></svg>Ligar</span>
-      </a></li>`).join('');
+        <span class="acoes-contato">
+          <span class="ligar"><svg width="16" height="16" aria-hidden="true"><use href="#i-telefone"/></svg>Ligar</span>
+          ${c.whatsapp ? `<a class="whats-contato" href="https://wa.me/${c.whatsapp}" target="_blank" rel="noopener"><svg width="16" height="16" aria-hidden="true"><use href="#i-conversa"/></svg>WhatsApp</a>` : ''}
+        </span>
+      </div></li>`).join('');
 }
 
 // ------------------------------------------------------------------ orientações: abas e kit
@@ -332,8 +333,7 @@ function iniciarTopo() {
 async function atualizar() {
   try {
     const [clima, alertaBruto] = await Promise.all([carregarClima(), carregarAlerta()]);
-    let c = clima, a = alertaBruto;
-    if (sim) ({ clima: c, alerta: a } = aplicarSimulacao(clima, alertaBruto, sim));
+    const c = clima, a = alertaBruto;
     estado.clima = c;
     estado.alertaBruto = a;
     estado.alerta = alertaVigente(a, c);
@@ -350,19 +350,11 @@ async function atualizar() {
   }
 }
 
-if (sim) $('#aviso-simulacao').hidden = false;
 renderContatos();
 iniciarKit();
 iniciarTopo();
 await atualizar();
 iniciarAbas();
-prepararFontes();
-
-const abrirCompartilhar = iniciarCompartilhar(() => estado);
-document.addEventListener('click', (e) => {
-  const b = e.target.closest('[data-compartilhar]');
-  if (b) abrirCompartilhar(b.dataset.compartilhar);
-});
 
 setInterval(atualizar, CONFIG.atualizarACadaMin * 60e3);
 let largura = innerWidth;

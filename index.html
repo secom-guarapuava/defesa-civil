@@ -22,7 +22,6 @@
 
   <svg width="0" height="0" style="position:absolute" aria-hidden="true">
     <symbol id="i-conversa" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M4 19.5 5.3 16A8 8 0 1 1 8 18.7L4 19.5Z"/><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M9 10.5h6M9 13.5h4"/></symbol>
-    <symbol id="i-compartilhar" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15V3m0 0L7.5 7.5M12 3l4.5 4.5"/><path d="M7 11H5.5A1.5 1.5 0 0 0 4 12.5v7A1.5 1.5 0 0 0 5.5 21h13a1.5 1.5 0 0 0 1.5-1.5v-7a1.5 1.5 0 0 0-1.5-1.5H17"/></g></symbol>
     <symbol id="i-telefone" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" d="M5 3.5h3.2l1.6 4.2-2.1 1.4a11 11 0 0 0 7.2 7.2l1.4-2.1 4.2 1.6V19a1.5 1.5 0 0 1-1.6 1.5C10.6 20 4 13.4 3.5 5.1A1.5 1.5 0 0 1 5 3.5Z"/></symbol>
     <symbol id="i-baixar" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m0 0-4.5-4.5M12 15l4.5-4.5"/><path d="M4 17v2.5A1.5 1.5 0 0 0 5.5 21h13a1.5 1.5 0 0 0 1.5-1.5V17"/></g></symbol>
     <symbol id="i-doc" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M6 2.8h8l4 4V21H6z"/><path d="M14 2.8V7h4M9 12h6M9 15.5h6"/></g></symbol>
@@ -51,8 +50,6 @@
     <div class="ceu" id="ceu-area">
       <canvas id="ceu" aria-hidden="true"></canvas>
       <div class="container ceu-conteudo">
-        <div class="faixa-info simulacao" id="aviso-simulacao" hidden>Modo demonstração: tempo e alerta simulados. Não é um alerta real.</div>
-
         <section id="alerta-area" aria-live="polite" aria-label="Situação de alerta"></section>
 
         <section class="agora" aria-labelledby="titulo-agora">
@@ -66,10 +63,9 @@
             <p class="cond" id="agora-cond">Carregando o tempo…</p>
             <p class="hoje-resumo" id="hoje-resumo"></p>
             <div class="agora-acoes">
-              <button class="btn btn-vidro" type="button" data-compartilhar="tempo">
-                <svg aria-hidden="true"><use href="#i-compartilhar"/></svg>Compartilhar o tempo
-              </button>
-              <a class="link-seta" data-link="simepar" href="#" target="_blank" rel="noopener">Previsão completa no SIMEPAR</a>
+              <a class="btn btn-vidro" data-link="simepar" href="#" target="_blank" rel="noopener">
+                <svg aria-hidden="true"><use href="#i-radar"/></svg>Previsão completa no SIMEPAR
+              </a>
             </div>
           </div>
           <dl class="agora-dados vidro" id="agora-dados" aria-label="Detalhes do tempo agora"></dl>
@@ -101,16 +97,10 @@
       <div class="container">
         <div class="secao-cab">
           <h2 id="t-boletins">Boletins e avisos oficiais</h2>
-          <p>Baixe o boletim de Guarapuava e acompanhe as fontes que a Defesa Civil usa todos os dias.</p>
+          <p>Acompanhe as fontes oficiais que a Defesa Civil usa todos os dias.</p>
         </div>
         <div class="avisos-inmet" id="avisos-inmet"></div>
         <div class="docs">
-          <a class="doc" href="data/boletim-guarapuava.pdf" download>
-            <span class="ico"><svg aria-hidden="true"><use href="#i-doc"/></svg></span>
-            <h3>Boletim do tempo de Guarapuava</h3>
-            <p>PDF com alerta em vigor, previsão dos próximos dias, chuva hora a hora e contatos. Atualizado sozinho a cada 30 minutos.</p>
-            <span class="acao" id="boletim-data">Baixar PDF</span>
-          </a>
           <a class="doc simepar" data-link="simepar" href="#" target="_blank" rel="noopener">
             <span class="ico"><svg aria-hidden="true"><use href="#i-radar"/></svg></span>
             <h3>Fique de olho no SIMEPAR</h3>
@@ -299,11 +289,6 @@
             <p><b>SMS da Defesa Civil.</b> Envie o seu CEP por SMS para 40199. É gratuito.</p>
             <a class="btn btn-claro" href="sms:40199"><svg aria-hidden="true"><use href="#i-sms"/></svg>Enviar SMS</a>
           </div>
-          <div class="canal-mini">
-            <span class="grande">(61) 2034-4611</span>
-            <p><b>WhatsApp da Defesa Civil Nacional.</b> Mande “oi” e cadastre Guarapuava.</p>
-            <a class="btn btn-claro" data-link="whatsNacional" href="#" target="_blank" rel="noopener"><svg aria-hidden="true"><use href="#i-conversa"/></svg>Mandar “oi”</a>
-          </div>
         </div>
       </div>
     </section>
@@ -328,7 +313,7 @@
             <img class="dc" src="assets/img/defesa-civil-guarapuava.png" alt="Defesa Civil de Guarapuava" width="64" height="64" loading="lazy">
             <img class="pref" src="assets/img/prefeitura-guarapuava-negativo.png" alt="Prefeitura de Guarapuava — Governo Municipal" width="260" height="55" loading="lazy">
           </div>
-          <p style="margin-top:16px">Coordenadoria Municipal de Proteção e Defesa Civil de Guarapuava. Este site se atualiza sozinho com a previsão do SIMEPAR e os alertas publicados pela equipe.</p>
+          <p style="margin-top:16px">Coordenadoria Municipal de Proteção e Defesa Civil de Guarapuava. Este site se atualiza sozinho com a previsão do SIMEPAR e os avisos oficiais.</p>
         </div>
         <div>
           <h2>Origem dos dados</h2>
@@ -336,11 +321,12 @@
           <p style="margin-top:10px" id="ultima-atualizacao"></p>
         </div>
         <div>
-          <h2>Área da equipe</h2>
+          <h2>Links úteis</h2>
           <ul>
-            <li><a href="painel.html">Painel de monitoramento</a></li>
-            <li><a href="gerenciar.html">Publicar alerta e gerar artes</a></li>
-            <li><a href="?simular=tempestade&amp;alerta=alto">Ver demonstração de alerta</a></li>
+            <li><a data-link="simepar" href="#" target="_blank" rel="noopener">Previsão do SIMEPAR para Guarapuava</a></li>
+            <li><a data-link="inmet" href="#" target="_blank" rel="noopener">Avisos meteorológicos do INMET</a></li>
+            <li><a data-link="defesaCivilPR" href="#" target="_blank" rel="noopener">Defesa Civil do Paraná</a></li>
+            <li><a data-link="prefeitura" href="#" target="_blank" rel="noopener">Prefeitura de Guarapuava</a></li>
           </ul>
         </div>
       </div>
@@ -348,45 +334,13 @@
     </div>
   </footer>
 
-  <nav class="barra-celular vidro" aria-label="Ações rápidas">
-    <button type="button" data-compartilhar="auto"><svg aria-hidden="true"><use href="#i-compartilhar"/></svg>Compartilhar</button>
-    <a class="ligar" href="tel:193"><svg aria-hidden="true"><use href="#i-telefone"/></svg>Ligar 193</a>
-    <a class="canal-b" data-link="canal" href="#" target="_blank" rel="noopener"><svg aria-hidden="true"><use href="#i-conversa"/></svg>Canal</a>
+  <nav class="barra-celular vidro" aria-label="Emergência">
+    <a class="ligar" href="tel:193"><svg aria-hidden="true"><use href="#i-telefone"/></svg><span>Bombeiros<b>Ligar 193</b></span></a>
+    <a class="whats-b" data-link="whatsPlantao" href="#" target="_blank" rel="noopener"><svg aria-hidden="true"><use href="#i-conversa"/></svg><span>Defesa Civil<b>WhatsApp 24h</b></span></a>
   </nav>
 
   <div class="dica" id="dica" hidden></div>
 
-  <dialog class="compartilhar" id="dlg-compartilhar" aria-labelledby="comp-titulo">
-    <div class="comp-grid">
-      <div class="comp-previa"><canvas id="comp-canvas" width="1080" height="1920" aria-label="Prévia da imagem para compartilhar"></canvas></div>
-      <form class="comp-form" method="dialog" id="comp-form">
-        <h2 id="comp-titulo">Compartilhar</h2>
-        <fieldset class="opcoes" id="comp-tipo">
-          <legend>O que você quer mandar?</legend>
-          <label><input type="radio" name="tipo" value="alerta"><span>Alerta em vigor</span></label>
-          <label><input type="radio" name="tipo" value="tempo" checked><span>Tempo agora</span></label>
-          <label><input type="radio" name="tipo" value="previsao"><span>Próximos 3 dias</span></label>
-        </fieldset>
-        <fieldset class="opcoes">
-          <legend>Formato da imagem</legend>
-          <label><input type="radio" name="formato" value="status" checked><span>Status (vertical)</span></label>
-          <label><input type="radio" name="formato" value="feed"><span>Post (4:5)</span></label>
-        </fieldset>
-        <div>
-          <label class="rot" for="comp-texto">Legenda (pode editar)</label>
-          <textarea id="comp-texto"></textarea>
-        </div>
-        <div class="comp-botoes">
-          <button class="btn btn-whats" type="button" id="comp-enviar"><svg aria-hidden="true"><use href="#i-compartilhar"/></svg>Compartilhar imagem</button>
-          <button class="btn btn-marca" type="button" id="comp-baixar"><svg aria-hidden="true"><use href="#i-baixar"/></svg>Baixar imagem</button>
-          <button class="btn btn-claro" type="button" id="comp-texto-whats"><svg aria-hidden="true"><use href="#i-conversa"/></svg>Mandar só o texto</button>
-          <button class="btn btn-claro" type="button" id="comp-copiar">Copiar legenda</button>
-        </div>
-        <p class="comp-msg" id="comp-msg" role="status"></p>
-      </form>
-    </div>
-    <button class="comp-fechar" type="button" id="comp-fechar" aria-label="Fechar">×</button>
-  </dialog>
 
   <script type="module" src="assets/js/app.js"></script>
 </body>
