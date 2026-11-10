@@ -1,0 +1,72 @@
+# Atualiza o tempo de Guarapuava e publica o site no GitHub Pages.
+#
+# Roda: a cada 30 minutos, a cada alteração no repositório (ex.: novo alerta)
+#       e quando alguém clica em "Run workflow" na aba Actions.
+# Requisito: Settings > Pages > Build and deployment > Source = "GitHub Actions".
+name: Atualizar tempo e publicar site
+
+on:
+  schedule:
+    - cron: "4,34 * * * *"
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: publicar-site
+  cancel-in-progress: false
+
+jobs:
+  publicar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - name: Baixar o repositório
+        uses: actions/checkout@v4
+
+      - name: Preparar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: scripts/requirements.txt
+
+      - name: Instalar dependências
+        run: pip install -r scripts/requirements.txt
+
+      - name: Buscar SIMEPAR, Open-Meteo e INMET
+        run: python scripts/atualizar_dados.py
+
+      - name: Guardar dados no histórico do repositório
+        continue-on-error: true
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/clima.json
+          if git diff --cached --quiet; then
+            echo "Nada mudou."
+          else
+            git commit -m "Atualiza dados do tempo"
+            git pull --rebase --autostash
+            git push
+          fi
+
+      - name: Configurar Pages
+        uses: actions/configure-pages@v5
+
+      - name: Empacotar site
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: .
+
+      - name: Publicar
+        id: deploy
+        uses: actions/deploy-pages@v4
