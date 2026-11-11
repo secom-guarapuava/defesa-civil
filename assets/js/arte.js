@@ -447,72 +447,102 @@ async function arteAlerta(c, w, h, { alerta, url }) {
   await rodape(c, w, h, url);
 }
 
-/** Banner horizontal para capa de matéria: só identidade, título e vigência. */
+/**
+ * Banner horizontal para capa de matéria (1350x615), tudo centralizado:
+ * selo do nível, título numa caixa do tamanho do texto, vigência e, embaixo, a faixa com as marcas.
+ */
 async function arteBanner(c, w, h, { alerta }) {
   const n = NIVEIS[alerta.nivel] || NIVEIS.alto;
   const escuro = n.texto !== '#FFFFFF';
-  const corTexto = escuro ? '#1A1640' : '#FFFFFF';
   gradiente(c, w, h, n.grad);
   chuvaTextura(c, w, h, 0.1, 160);
   brilhos(c, w, h, '255,255,255', 0.35);
-  const X = 56, L = w - 112;
+  const cx = w / 2;
+  const centro = (txt, y) => { c.textAlign = 'center'; c.fillText(txt, cx, y); c.textAlign = 'left'; };
 
-  // identidade: Defesa Civil à esquerda, Prefeitura à direita
-  const [logo, pref] = await Promise.all([
-    imagem('assets/img/defesa-civil-guarapuava.png'),
-    imagem(escuro ? 'assets/img/prefeitura-guarapuava.png' : 'assets/img/prefeitura-guarapuava-negativo.png'),
-  ]);
-  const yTopo = 42, lado = 88;
-  if (logo) { c.save(); rr(c, X, yTopo, lado, lado, 20); c.clip(); c.drawImage(logo, X, yTopo, lado, lado); c.restore(); }
-  c.fillStyle = corTexto;
-  c.font = '800 40px "Saira SemiCond"';
-  c.fillText('Defesa Civil', X + lado + 20, yTopo + 46);
-  c.font = '400 26px "Atkinson DC"';
-  c.globalAlpha = 0.9; c.fillText('Guarapuava · Paraná', X + lado + 20, yTopo + 80); c.globalAlpha = 1;
-  if (pref) {
-    const ph = 64, pw = Math.min(330, ph * pref.width / pref.height);
-    c.drawImage(pref, w - X - pw, yTopo + (lado - pw * pref.height / pref.width) / 2, pw, pw * pref.height / pref.width);
-  }
+  // ---------- faixa das marcas (embaixo, centralizada)
+  const faixaH = 104, faixaY = h - faixaH;
+  c.fillStyle = 'rgba(10,6,50,0.38)';
+  c.fillRect(0, faixaY, w, faixaH);
+  const [logo, pref] = await Promise.all([imagem('assets/img/defesa-civil-guarapuava.png'), imagem('assets/img/prefeitura-guarapuava-negativo.png')]);
+  const lado = 64, prefW = 270, prefH = pref ? prefW * pref.height / pref.width : 0;
+  c.font = '800 32px "Saira SemiCond"';
+  const nomeW = Math.max(c.measureText('Defesa Civil').width, (c.font = '400 22px "Atkinson DC"', c.measureText('Guarapuava · Paraná').width));
+  const grupoW = lado + 16 + nomeW + 36 + 2 + 36 + prefW;
+  let gx = cx - grupoW / 2;
+  const my = faixaY + faixaH / 2;
+  if (logo) { c.save(); rr(c, gx, my - lado / 2, lado, lado, 14); c.clip(); c.drawImage(logo, gx, my - lado / 2, lado, lado); c.restore(); }
+  gx += lado + 16;
+  c.fillStyle = '#FFFFFF';
+  c.font = '800 32px "Saira SemiCond"'; c.fillText('Defesa Civil', gx, my - 2);
+  c.font = '400 22px "Atkinson DC"'; c.globalAlpha = 0.9; c.fillText('Guarapuava · Paraná', gx, my + 26); c.globalAlpha = 1;
+  gx += nomeW + 36;
+  c.fillStyle = 'rgba(255,255,255,0.45)'; c.fillRect(gx, my - 28, 2, 56);
+  gx += 2 + 36;
+  if (pref) c.drawImage(pref, gx, my - prefH / 2, prefW, prefH);
 
-  // título (até 2 linhas) e vigência, centralizados na área livre
-  const titulo = (alerta.titulo || n.nome).toUpperCase();
-  const t = ajustar(c, titulo, (s) => `900 ${s}px "Saira Cond"`, L - 80, 2, 132, 56);
-  const padT = 34;
-  const hT = t.l.length * t.s * 0.98 + padT * 2 - t.s * 0.12;
+  // ---------- conteúdo
+  const selo = `ALERTA ${n.cor.toUpperCase()} · ${n.nome.toUpperCase()}`;
+  const hS = 58, gap = 22;
   const vig = alerta.inicio && alerta.fim ? fmtVigencia(alerta.inicio, alerta.fim) : '';
   const vigTxt = vig ? `Vigência: ${vig}` : '';
-  const vs = vigTxt ? ajustar(c, vigTxt, (s) => `700 ${s}px "Atkinson DC"`, L - 60, 1, 38, 24).s : 0;
-  const hV = vigTxt ? vs + 40 : 0;
-  const gap = vigTxt ? 26 : 0;
-  const areaIni = yTopo + lado + 30, areaFim = h - 44;
-  let y = areaIni + (areaFim - areaIni - (hT + gap + hV)) / 2;
+  const vs = vigTxt ? ajustar(c, vigTxt, (s) => `700 ${s}px "Atkinson DC"`, w - 200, 1, 36, 24).s : 0;
+  const hV = vigTxt ? vs + 36 : 0;
+  const areaIni = 34, areaFim = faixaY - 30;
+  const padX = 48, padY = 28, largMax = w - 160 - padX * 2;
+  const titulo = (alerta.titulo || n.nome).toUpperCase();
+  let t = null;
+  for (let sz = 176; sz >= 52; sz -= 2) {
+    c.font = `900 ${sz}px "Saira Cond"`;
+    const l = quebrar(c, titulo, largMax);
+    const hT = l.length * sz * 0.98 + padY * 2 - sz * 0.12;
+    const wT = Math.max(...l.map((x) => c.measureText(x).width)) + padX * 2;
+    t = { s: sz, l, hT, wT };
+    if (l.length <= 2 && wT <= w - 160 && hS + gap + hT + (hV ? gap + hV : 0) <= areaFim - areaIni) break;
+  }
+  const total = hS + gap + t.hT + (hV ? gap + hV : 0);
+  let y = areaIni + (areaFim - areaIni - total) / 2;
 
+  // selo do nível: diz qual risco a cor representa
+  c.font = '800 30px "Atkinson DC"';
+  const sw = c.measureText(selo).width + 86;
+  const sx = cx - sw / 2;
+  vidro(c, sx, y, sw, hS, hS / 2, 0.3);
+  c.fillStyle = n.texto;
+  c.beginPath(); c.arc(sx + 32, y + hS / 2, 15, 0, Math.PI * 2); c.fill();
+  c.fillStyle = escuro ? '#FFFFFF' : n.grad[1];
+  c.font = '900 24px "Saira Cond"'; c.textAlign = 'center'; c.fillText('!', sx + 32, y + hS / 2 + 9); c.textAlign = 'left';
+  c.fillStyle = n.texto; c.font = '800 30px "Atkinson DC"'; c.fillText(selo, sx + 60, y + hS / 2 + 11);
+  y += hS + gap;
+
+  // título numa caixa do tamanho do texto
+  const tx = cx - t.wT / 2;
   c.save();
-  rr(c, X, y, L, hT, 44);
-  const g = c.createLinearGradient(X, y, X + L, y + hT);
+  rr(c, tx, y, t.wT, t.hT, 40);
+  const g = c.createLinearGradient(tx, y, tx + t.wT, y + t.hT);
   g.addColorStop(0, '#2B1DB5'); g.addColorStop(1, '#120B54');
   c.fillStyle = g; c.fill();
   c.strokeStyle = 'rgba(255,255,255,0.35)'; c.lineWidth = 2; c.stroke();
   c.restore();
   c.fillStyle = '#FFD24A';
   c.font = `900 ${t.s}px "Saira Cond"`;
-  t.l.forEach((l, i) => c.fillText(l, X + 40, y + padT + t.s * 0.8 + i * t.s * 0.98));
-  y += hT + gap;
+  t.l.forEach((l, i) => centro(l, y + padY + t.s * 0.8 + i * t.s * 0.98));
+  y += t.hT + gap;
 
   if (vigTxt) {
-    // pílula escura (mesmo tom do título): leitura boa em qualquer cor de nível
     c.font = `700 ${vs}px "Atkinson DC"`;
     const rot = 'Vigência: ';
     const wr = c.measureText(rot).width;
     const pw = c.measureText(vigTxt).width + 64;
+    const px = cx - pw / 2;
     c.save();
-    rr(c, X, y, pw, hV, hV / 2);
+    rr(c, px, y, pw, hV, hV / 2);
     c.fillStyle = 'rgba(18,11,84,0.9)'; c.fill();
     c.strokeStyle = 'rgba(255,255,255,0.35)'; c.lineWidth = 2; c.stroke();
     c.restore();
     const yb = y + hV / 2 + vs * 0.36;
-    c.fillStyle = '#FFD24A'; c.fillText(rot, X + 32, yb);
-    c.fillStyle = '#FFFFFF'; c.fillText(vig, X + 32 + wr, yb);
+    c.fillStyle = '#FFD24A'; c.fillText(rot, px + 32, yb);
+    c.fillStyle = '#FFFFFF'; c.fillText(vig, px + 32 + wr, yb);
   }
 }
 
