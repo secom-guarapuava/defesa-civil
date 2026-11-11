@@ -1,10 +1,11 @@
-// Gerador de artes para WhatsApp/Instagram (status 1080x1920 e post 1080x1350).
+// Gerador de artes para WhatsApp/Instagram (status 1080x1920 e post 1080x1350)
+// e banner de alerta para capa de matéria (1350x615).
 // Usado pelo botão "Compartilhar" do site e pela página de gestão de alertas.
 import { CONFIG } from './config.js';
 import { NIVEIS, FENOMENOS, iconeURL } from './clima.js';
-import { diaSemana, fmtData, fmtHora, fmtQuando, fmtVigencia, graus, mm, nomeDoDia, num } from './util.js';
+import { diaSemana, fmtData, fmtHora, fmtQuando, fmtVigencia, graus, mm, nomeDoDia, num, rotuloDatas } from './util.js';
 
-export const FORMATOS = { status: [1080, 1920], feed: [1080, 1350] };
+export const FORMATOS = { status: [1080, 1920], feed: [1080, 1350], banner: [1350, 615] };
 
 const CEUS = {
   sol: ['#1E63D8', '#3D8BF0', '#8CC6FF'],
@@ -162,17 +163,23 @@ async function rodape(c, w, h, url) {
   const y = h - 150;
   c.fillStyle = 'rgba(10,6,50,0.35)';
   c.fillRect(0, y - 20, w, 170);
+  const lw = w > 1200 ? 430 : 360;
   if (pref) {
-    const lw = 430, lh = lw * pref.height / pref.width;
+    const lh = lw * pref.height / pref.width;
     c.drawImage(pref, 64, y + 65 - lh / 2, lw, lh);
   }
+  // espaço que sobra à direita do logo (com folga), para o texto nunca encostar nele
+  const livre = w - 64 - (64 + lw + 44);
+  const endereco = url.replace(/^https?:\/\//, '').replace(/\/$/, '');
+  const t1 = ajustar(c, 'Acompanhe o tempo e os alertas:', (s) => `700 ${s}px "Atkinson DC"`, livre, 1, 30, 20).s;
+  const t2 = ajustar(c, endereco, (s) => `400 ${s}px "Atkinson DC"`, livre, 1, 28, 18).s;
   c.textAlign = 'right';
   c.fillStyle = '#fff';
-  c.font = '700 30px "Atkinson DC"';
+  c.font = `700 ${t1}px "Atkinson DC"`;
   c.fillText('Acompanhe o tempo e os alertas:', w - 64, y + 52);
-  c.font = '400 28px "Atkinson DC"';
+  c.font = `400 ${t2}px "Atkinson DC"`;
   c.globalAlpha = 0.92;
-  c.fillText(url.replace(/^https?:\/\//, '').replace(/\/$/, ''), w - 64, y + 94);
+  c.fillText(endereco, w - 64, y + 94);
   c.globalAlpha = 1;
   c.textAlign = 'left';
 }
@@ -319,7 +326,11 @@ async function arteAlerta(c, w, h, { alerta, url }) {
   const montar = (comImpactos) => {
     const b = [];
     if (alerta.dias?.length) alerta.dias.forEach((d) => b.push(['dia', d.rotulo], ['txt', d.texto]));
-    else if (alerta.resumo) b.push(['txt', alerta.resumo]);
+    else if (alerta.resumo) {
+      const quando = rotuloDatas(alerta.inicio, alerta.fim);
+      if (quando) b.push(['dia', quando]);
+      b.push(['txt', alerta.resumo]);
+    }
     if (comImpactos && alerta.impactos?.length) b.push(['imp', `Podem ocorrer: ${alerta.impactos.join(', ')}.`]);
     return b.filter(([, txt]) => txt);
   };
@@ -434,6 +445,75 @@ async function arteAlerta(c, w, h, { alerta, url }) {
 
   pilulaContatos(c, w, contatosY, contatosH);
   await rodape(c, w, h, url);
+}
+
+/** Banner horizontal para capa de matéria: só identidade, título e vigência. */
+async function arteBanner(c, w, h, { alerta }) {
+  const n = NIVEIS[alerta.nivel] || NIVEIS.alto;
+  const escuro = n.texto !== '#FFFFFF';
+  const corTexto = escuro ? '#1A1640' : '#FFFFFF';
+  gradiente(c, w, h, n.grad);
+  chuvaTextura(c, w, h, 0.1, 160);
+  brilhos(c, w, h, '255,255,255', 0.35);
+  const X = 56, L = w - 112;
+
+  // identidade: Defesa Civil à esquerda, Prefeitura à direita
+  const [logo, pref] = await Promise.all([
+    imagem('assets/img/defesa-civil-guarapuava.png'),
+    imagem(escuro ? 'assets/img/prefeitura-guarapuava.png' : 'assets/img/prefeitura-guarapuava-negativo.png'),
+  ]);
+  const yTopo = 42, lado = 88;
+  if (logo) { c.save(); rr(c, X, yTopo, lado, lado, 20); c.clip(); c.drawImage(logo, X, yTopo, lado, lado); c.restore(); }
+  c.fillStyle = corTexto;
+  c.font = '800 40px "Saira SemiCond"';
+  c.fillText('Defesa Civil', X + lado + 20, yTopo + 46);
+  c.font = '400 26px "Atkinson DC"';
+  c.globalAlpha = 0.9; c.fillText('Guarapuava · Paraná', X + lado + 20, yTopo + 80); c.globalAlpha = 1;
+  if (pref) {
+    const ph = 64, pw = Math.min(330, ph * pref.width / pref.height);
+    c.drawImage(pref, w - X - pw, yTopo + (lado - pw * pref.height / pref.width) / 2, pw, pw * pref.height / pref.width);
+  }
+
+  // título (até 2 linhas) e vigência, centralizados na área livre
+  const titulo = (alerta.titulo || n.nome).toUpperCase();
+  const t = ajustar(c, titulo, (s) => `900 ${s}px "Saira Cond"`, L - 80, 2, 132, 56);
+  const padT = 34;
+  const hT = t.l.length * t.s * 0.98 + padT * 2 - t.s * 0.12;
+  const vig = alerta.inicio && alerta.fim ? fmtVigencia(alerta.inicio, alerta.fim) : '';
+  const vigTxt = vig ? `Vigência: ${vig}` : '';
+  const vs = vigTxt ? ajustar(c, vigTxt, (s) => `700 ${s}px "Atkinson DC"`, L - 60, 1, 38, 24).s : 0;
+  const hV = vigTxt ? vs + 40 : 0;
+  const gap = vigTxt ? 26 : 0;
+  const areaIni = yTopo + lado + 30, areaFim = h - 44;
+  let y = areaIni + (areaFim - areaIni - (hT + gap + hV)) / 2;
+
+  c.save();
+  rr(c, X, y, L, hT, 44);
+  const g = c.createLinearGradient(X, y, X + L, y + hT);
+  g.addColorStop(0, '#2B1DB5'); g.addColorStop(1, '#120B54');
+  c.fillStyle = g; c.fill();
+  c.strokeStyle = 'rgba(255,255,255,0.35)'; c.lineWidth = 2; c.stroke();
+  c.restore();
+  c.fillStyle = '#FFD24A';
+  c.font = `900 ${t.s}px "Saira Cond"`;
+  t.l.forEach((l, i) => c.fillText(l, X + 40, y + padT + t.s * 0.8 + i * t.s * 0.98));
+  y += hT + gap;
+
+  if (vigTxt) {
+    // pílula escura (mesmo tom do título): leitura boa em qualquer cor de nível
+    c.font = `700 ${vs}px "Atkinson DC"`;
+    const rot = 'Vigência: ';
+    const wr = c.measureText(rot).width;
+    const pw = c.measureText(vigTxt).width + 64;
+    c.save();
+    rr(c, X, y, pw, hV, hV / 2);
+    c.fillStyle = 'rgba(18,11,84,0.9)'; c.fill();
+    c.strokeStyle = 'rgba(255,255,255,0.35)'; c.lineWidth = 2; c.stroke();
+    c.restore();
+    const yb = y + hV / 2 + vs * 0.36;
+    c.fillStyle = '#FFD24A'; c.fillText(rot, X + 32, yb);
+    c.fillStyle = '#FFFFFF'; c.fillText(vig, X + 32 + wr, yb);
+  }
 }
 
 async function arteTempo(c, w, h, { clima, alerta, url }) {
@@ -579,16 +659,20 @@ async function artePrevisao(c, w, h, { clima, alerta, url }) {
 /**
  * Desenha a arte no canvas.
  * @param {HTMLCanvasElement} canvas
- * @param {{tipo:'alerta'|'tempo'|'previsao', formato:'status'|'feed', clima, alerta, url}} op
+ * @param {{tipo:'alerta'|'tempo'|'previsao', formato:'status'|'feed'|'banner', clima, alerta, url}} op
+ * O banner (capa de matéria) existe só para o alerta; nos outros tipos vira post.
  */
 export async function desenharArte(canvas, op) {
   await prepararFontes();
-  const [w, h] = FORMATOS[op.formato] || FORMATOS.status;
+  const banner = op.formato === 'banner' && op.tipo === 'alerta' && op.alerta;
+  const formato = op.formato === 'banner' && !banner ? 'feed' : op.formato;
+  const [w, h] = FORMATOS[formato] || FORMATOS.status;
   canvas.width = w;
   canvas.height = h;
   const c = canvas.getContext('2d');
   c.clearRect(0, 0, w, h);
   c.textBaseline = 'alphabetic';
+  if (banner) return arteBanner(c, w, h, op);
   if (op.tipo === 'alerta' && op.alerta) return arteAlerta(c, w, h, op);
   if (op.tipo === 'previsao') return artePrevisao(c, w, h, op);
   return arteTempo(c, w, h, op);

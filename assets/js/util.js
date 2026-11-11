@@ -24,6 +24,19 @@ export const hojeISO = (d = new Date()) => partes(d).iso;
 export const diaSemana = (d, curto = false) => (curto ? DIAS_CURTOS : DIAS)[partes(d).semana];
 export const doisDig = (n) => String(n).padStart(2, '0');
 
+/** Data do alerta para abrir o texto: "Quarta-feira, 11/11" ou "De quarta (11/11) a sexta (13/11)". */
+export function rotuloDatas(ini, fim) {
+  if (!ini) return '';
+  ini = new Date(ini);
+  fim = fim ? new Date(fim) : ini;
+  if (partes(ini).iso === partes(fim).iso) {
+    const d = diaSemana(ini);
+    return `${d.charAt(0).toUpperCase()}${d.slice(1)}, ${fmtData(ini)}`;
+  }
+  const curto = (d) => diaSemana(d).replace('-feira', '');
+  return `De ${curto(ini)} (${fmtData(ini)}) a ${curto(fim)} (${fmtData(fim)})`;
+}
+
 export function fmtHora(d, comMin = true) {
   const p = partes(d);
   if (!comMin || p.min === 0) return `${p.hora}h`;

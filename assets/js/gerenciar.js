@@ -133,6 +133,9 @@ let pendente = null;
 async function atualizar() {
   const tipo = tipoArte();
   $('#campos-alerta').classList.toggle('desativado', tipo !== 'alerta');
+  // banner de capa de matéria (1350x615) só existe para o alerta
+  $('#op-banner').hidden = tipo !== 'alerta';
+  if (tipo !== 'alerta' && $('#formato input[value="banner"]').checked) $('#formato input[value="feed"]').checked = true;
   clearTimeout(pendente);
   pendente = setTimeout(async () => {
     const formato = $('#formato').querySelector('input:checked').value;

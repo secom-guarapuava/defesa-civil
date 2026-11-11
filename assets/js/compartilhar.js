@@ -1,7 +1,7 @@
 // Legendas prontas para WhatsApp e Instagram (usadas na área da equipe).
 import { CONFIG, urlDoSite } from './config.js';
 import { NIVEIS } from './clima.js';
-import { fmtData, fmtHora, fmtQuando, fmtVigencia, graus, mm, nomeDoDia, num } from './util.js';
+import { fmtData, fmtHora, fmtQuando, fmtVigencia, graus, mm, nomeDoDia, num, rotuloDatas } from './util.js';
 
 const contatoDC = () => CONFIG.contatos.find((c) => c.nome.includes('Guarapuava'));
 
@@ -25,7 +25,10 @@ export function textoAlerta(alerta, url = urlDoSite()) {
   if (alerta.inicio && alerta.fim) linhas.push(`🗓️ Vigência: ${fmtVigencia(alerta.inicio, alerta.fim)}`);
   linhas.push('');
   if (alerta.dias?.length) alerta.dias.forEach((d) => linhas.push(`*${d.rotulo}:* ${d.texto}`, ''));
-  else if (alerta.resumo) linhas.push(alerta.resumo, '');
+  else if (alerta.resumo) {
+    const quando = rotuloDatas(alerta.inicio, alerta.fim);
+    linhas.push(quando ? `*${quando}:* ${alerta.resumo}` : alerta.resumo, '');
+  }
   if (alerta.impactos?.length) linhas.push(`⚠️ Podem ocorrer: ${alerta.impactos.join(', ')}.`);
   if (alerta.origem === 'inmet') linhas.push('Fonte: aviso meteorológico do INMET.');
   return linhas.join('\n').replace(/\n{3,}/g, '\n\n') + '\n' + rodapeTexto(url);

@@ -57,6 +57,7 @@ export function urlDoSite() {
   const u = new URL(location.href);
   u.search = '';
   u.hash = '';
-  u.pathname = u.pathname.replace(/(index|painel|gerenciar)\.html$/, '');
+  // o GitHub Pages abre a página com ou sem ".html" (/gerenciar e /gerenciar.html)
+  u.pathname = u.pathname.replace(/(index|painel|gerenciar)(\.html)?$/, '');
   return u.toString();
 }
