@@ -7,56 +7,42 @@
   "lat": -25.3902,
   "lon": -51.4623
  },
- "gerado_em": "2026-11-11T11:59-03:00",
+ "gerado_em": "2026-11-11T12:07-03:00",
  "fontes": {
   "simepar": {
    "ok": false,
    "url": "https://www.simepar.br/simepar/forecast_by_counties/4109401",
    "erro": "403 Client Error: Forbidden for url: https://www.simepar.br/simepar/forecast_by_counties/4109401",
-   "em": "2026-11-11T11:59-03:00"
+   "em": "2026-11-11T12:07-03:00"
   },
   "openmeteo": {
    "ok": true,
    "url": "https://open-meteo.com/",
-   "em": "2026-11-11T11:59-03:00"
+   "em": "2026-11-11T12:07-03:00"
   },
   "inmet": {
    "ok": true,
    "url": "https://alertas2.inmet.gov.br/",
-   "em": "2026-11-11T11:59-03:00"
+   "em": "2026-11-11T12:07-03:00"
   }
  },
  "atual": {
-  "temp": 24.5,
-  "sensacao": 26.2,
-  "umidade": 50,
+  "temp": 24.9,
+  "sensacao": 26.5,
+  "umidade": 49,
   "chuva_mm": 0.0,
-  "vento": 8.1,
+  "vento": 8.2,
   "vento_dir": "N",
-  "rajada": 27.0,
-  "nuvens": 99,
+  "rajada": 25.2,
+  "nuvens": 98,
   "dia": true,
   "condicao": "nublado",
   "descricao": "Nublado",
-  "hora": "2026-11-11T11:45-03:00",
+  "hora": "2026-11-11T12:00-03:00",
   "fonte": "openmeteo"
  },
  "chuva_24h_mm": 0.0,
  "horas": [
-  {
-   "t": "2026-11-11T11:00-03:00",
-   "temp": 23.2,
-   "sensacao": 25.4,
-   "umidade": 55,
-   "chuva_mm": 0,
-   "prob": 0,
-   "vento": 8.4,
-   "rajada": 33.5,
-   "dia": true,
-   "condicao": "nublado",
-   "descricao": "Nublado",
-   "fonte": "openmeteo"
-  },
   {
    "t": "2026-11-11T12:00-03:00",
    "temp": 24.9,
@@ -713,6 +699,20 @@
    "dia": true,
    "condicao": "poucas-nuvens",
    "descricao": "Parcialmente nublado",
+   "fonte": "openmeteo"
+  },
+  {
+   "t": "2026-11-13T11:00-03:00",
+   "temp": 25.2,
+   "sensacao": 28.8,
+   "umidade": 60,
+   "chuva_mm": 0,
+   "prob": 25,
+   "vento": 7.1,
+   "rajada": 22.7,
+   "dia": true,
+   "condicao": "limpo",
+   "descricao": "Céu limpo",
    "fonte": "openmeteo"
   }
  ],
