@@ -13,17 +13,17 @@
    "ok": false,
    "url": "https://www.simepar.br/simepar/forecast_by_counties/4109401",
    "erro": "403 Client Error: Forbidden for url: https://www.simepar.br/simepar/forecast_by_counties/4109401",
-   "em": "2026-11-14T06:57-03:00"
+   "em": "2026-11-14T13:27-03:00"
   },
   "openmeteo": {
-   "ok": true,
-   "url": "https://open-meteo.com/",
-   "em": "2026-11-14T06:57-03:00"
+   "ok": false,
+   "erro": "HTTPSConnectionPool(host='api.open-meteo.com', port=443): Read timed out. (read timeout=25)",
+   "em": "2026-11-14T13:28-03:00"
   },
   "inmet": {
    "ok": true,
    "url": "https://alertas2.inmet.gov.br/",
-   "em": "2026-11-14T06:57-03:00"
+   "em": "2026-11-14T13:28-03:00"
   }
  },
  "atual": {
@@ -848,11 +848,11 @@
  ],
  "avisos_inmet": [
   {
-   "id": "56398",
+   "id": "56405",
    "evento": "Tempestade",
    "severidade": "Perigo Potencial",
    "nivel": "moderado",
-   "inicio": "2026-11-14T00:00-03:00",
+   "inicio": "2026-11-14T20:00-03:00",
    "fim": "2026-11-14T23:59-03:00",
    "riscos": [
     "Chuva entre 20 e 30 mm/h ou até 50 mm/dia, ventos intensos (40-60 km/h), e queda de granizo. Baixo risco de corte de energia elétrica, estragos em plantações, queda de galhos de árvores e de alagamentos."
@@ -862,10 +862,10 @@
     "Evite usar aparelhos eletrônicos ligados à tomada. ",
     "Obtenha mais informações junto à Defesa Civil (telefone 199) e ao Corpo de Bombeiros (telefone 193)."
    ],
-   "link": "https://alertas2.inmet.gov.br/56398"
+   "link": "https://alertas2.inmet.gov.br/56405"
   },
   {
-   "id": "56399",
+   "id": "56408",
    "evento": "Tempestade",
    "severidade": "Perigo Potencial",
    "nivel": "moderado",
@@ -879,7 +879,7 @@
     "Evite usar aparelhos eletrônicos ligados à tomada. ",
     "Obtenha mais informações junto à Defesa Civil (telefone 199) e ao Corpo de Bombeiros (telefone 193)."
    ],
-   "link": "https://alertas2.inmet.gov.br/56399"
+   "link": "https://alertas2.inmet.gov.br/56408"
   }
  ]
 }
