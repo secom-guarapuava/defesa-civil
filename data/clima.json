@@ -7,98 +7,42 @@
   "lat": -25.3902,
   "lon": -51.4623
  },
- "gerado_em": "2026-11-15T17:30-03:00",
+ "gerado_em": "2026-11-15T21:16-03:00",
  "fontes": {
   "simepar": {
    "ok": false,
    "url": "https://www.simepar.br/simepar/forecast_by_counties/4109401",
    "erro": "403 Client Error: Forbidden for url: https://www.simepar.br/simepar/forecast_by_counties/4109401",
-   "em": "2026-11-15T17:30-03:00"
+   "em": "2026-11-15T21:16-03:00"
   },
   "openmeteo": {
    "ok": true,
    "url": "https://open-meteo.com/",
-   "em": "2026-11-15T17:30-03:00"
+   "em": "2026-11-15T21:16-03:00"
   },
   "inmet": {
    "ok": true,
    "url": "https://alertas2.inmet.gov.br/",
-   "em": "2026-11-15T17:30-03:00"
+   "em": "2026-11-15T21:16-03:00"
   }
  },
  "atual": {
-  "temp": 19.3,
-  "sensacao": 20.9,
-  "umidade": 95,
-  "chuva_mm": 0.1,
-  "vento": 10.0,
-  "vento_dir": "O",
-  "rajada": 31.0,
-  "nuvens": 100,
-  "dia": true,
-  "condicao": "garoa",
-  "descricao": "Garoa fraca",
-  "hora": "2026-11-15T17:30-03:00",
+  "temp": 18.3,
+  "sensacao": 20.6,
+  "umidade": 98,
+  "chuva_mm": 0.0,
+  "vento": 4.4,
+  "vento_dir": "S",
+  "rajada": 10.4,
+  "nuvens": 32,
+  "dia": false,
+  "condicao": "poucas-nuvens",
+  "descricao": "Predomínio de sol",
+  "hora": "2026-11-15T21:15-03:00",
   "fonte": "openmeteo"
  },
- "chuva_24h_mm": 11.9,
+ "chuva_24h_mm": 15.0,
  "horas": [
-  {
-   "t": "2026-11-15T17:00-03:00",
-   "temp": 19.3,
-   "sensacao": 20.5,
-   "umidade": 95,
-   "chuva_mm": 1.0,
-   "prob": 100,
-   "vento": 13.7,
-   "rajada": 31.3,
-   "dia": true,
-   "condicao": "garoa",
-   "descricao": "Garoa forte",
-   "fonte": "openmeteo"
-  },
-  {
-   "t": "2026-11-15T18:00-03:00",
-   "temp": 19.2,
-   "sensacao": 21.5,
-   "umidade": 95,
-   "chuva_mm": 0.4,
-   "prob": 98,
-   "vento": 5.4,
-   "rajada": 29.2,
-   "dia": true,
-   "condicao": "garoa",
-   "descricao": "Garoa fraca",
-   "fonte": "openmeteo"
-  },
-  {
-   "t": "2026-11-15T19:00-03:00",
-   "temp": 18.6,
-   "sensacao": 21.2,
-   "umidade": 98,
-   "chuva_mm": 0.5,
-   "prob": 79,
-   "vento": 2.6,
-   "rajada": 17.3,
-   "dia": false,
-   "condicao": "garoa",
-   "descricao": "Garoa",
-   "fonte": "openmeteo"
-  },
-  {
-   "t": "2026-11-15T20:00-03:00",
-   "temp": 18.2,
-   "sensacao": 21.0,
-   "umidade": 98,
-   "chuva_mm": 0.2,
-   "prob": 51,
-   "vento": 0.5,
-   "rajada": 6.1,
-   "dia": false,
-   "condicao": "garoa",
-   "descricao": "Garoa fraca",
-   "fonte": "openmeteo"
-  },
   {
    "t": "2026-11-15T21:00-03:00",
    "temp": 18.5,
@@ -714,6 +658,62 @@
    "condicao": "nublado",
    "descricao": "Nublado",
    "fonte": "openmeteo"
+  },
+  {
+   "t": "2026-11-17T17:00-03:00",
+   "temp": 26.7,
+   "sensacao": 27.4,
+   "umidade": 48,
+   "chuva_mm": 0,
+   "prob": 72,
+   "vento": 5.9,
+   "rajada": 17.6,
+   "dia": true,
+   "condicao": "nublado",
+   "descricao": "Nublado",
+   "fonte": "openmeteo"
+  },
+  {
+   "t": "2026-11-17T18:00-03:00",
+   "temp": 24.5,
+   "sensacao": 26.2,
+   "umidade": 63,
+   "chuva_mm": 0.1,
+   "prob": 69,
+   "vento": 5.6,
+   "rajada": 15.1,
+   "dia": true,
+   "condicao": "garoa",
+   "descricao": "Garoa fraca",
+   "fonte": "openmeteo"
+  },
+  {
+   "t": "2026-11-17T19:00-03:00",
+   "temp": 22.0,
+   "sensacao": 23.3,
+   "umidade": 74,
+   "chuva_mm": 0,
+   "prob": 55,
+   "vento": 7.9,
+   "rajada": 14.4,
+   "dia": false,
+   "condicao": "nublado",
+   "descricao": "Nublado",
+   "fonte": "openmeteo"
+  },
+  {
+   "t": "2026-11-17T20:00-03:00",
+   "temp": 20.4,
+   "sensacao": 21.9,
+   "umidade": 80,
+   "chuva_mm": 0,
+   "prob": 35,
+   "vento": 5.9,
+   "rajada": 14.8,
+   "dia": false,
+   "condicao": "nublado",
+   "descricao": "Nublado",
+   "fonte": "openmeteo"
   }
  ],
  "dias": [
@@ -744,7 +744,7 @@
    "vento_dir": "L",
    "nascer": "2026-11-16T05:29-03:00",
    "por": "2026-11-16T18:52-03:00",
-   "uv": 9.4,
+   "uv": 9.45,
    "condicao": "neblina",
    "descricao": "Neblina",
    "fonte": "openmeteo"
@@ -760,7 +760,7 @@
    "vento_dir": "NE",
    "nascer": "2026-11-17T05:29-03:00",
    "por": "2026-11-17T18:52-03:00",
-   "uv": 8.45,
+   "uv": 8.4,
    "condicao": "garoa",
    "descricao": "Garoa fraca",
    "fonte": "openmeteo"
@@ -776,7 +776,7 @@
    "vento_dir": "NE",
    "nascer": "2026-11-18T05:28-03:00",
    "por": "2026-11-18T18:53-03:00",
-   "uv": 9.3,
+   "uv": 7.9,
    "condicao": "chuva",
    "descricao": "Pancadas de chuva",
    "fonte": "openmeteo"
@@ -792,7 +792,7 @@
    "vento_dir": "NO",
    "nascer": "2026-11-19T05:28-03:00",
    "por": "2026-11-19T18:54-03:00",
-   "uv": 3.95,
+   "uv": 5.8,
    "condicao": "tempestade",
    "descricao": "Tempestade",
    "fonte": "openmeteo"
@@ -808,7 +808,7 @@
    "vento_dir": "NE",
    "nascer": "2026-11-20T05:28-03:00",
    "por": "2026-11-20T18:55-03:00",
-   "uv": 4.0,
+   "uv": 8.4,
    "condicao": "tempestade",
    "descricao": "Tempestade",
    "fonte": "openmeteo"
@@ -824,7 +824,7 @@
    "vento_dir": "NO",
    "nascer": "2026-11-21T05:28-03:00",
    "por": "2026-11-21T18:55-03:00",
-   "uv": 7.6,
+   "uv": 9.65,
    "condicao": "garoa",
    "descricao": "Garoa fraca",
    "fonte": "openmeteo"
@@ -840,7 +840,7 @@
    "vento_dir": "NO",
    "nascer": "2026-11-22T05:27-03:00",
    "por": "2026-11-22T18:56-03:00",
-   "uv": 8.75,
+   "uv": 9.2,
    "condicao": "tempestade",
    "descricao": "Tempestade",
    "fonte": "openmeteo"
