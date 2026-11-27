@@ -13,17 +13,17 @@
    "ok": false,
    "url": "https://www.simepar.br/simepar/forecast_by_counties/4109401",
    "erro": "403 Client Error: Forbidden for url: https://www.simepar.br/simepar/forecast_by_counties/4109401",
-   "em": "2026-11-26T18:50-03:00"
+   "em": "2026-11-27T00:59-03:00"
   },
   "openmeteo": {
    "ok": false,
    "erro": "HTTPSConnectionPool(host='api.open-meteo.com', port=443): Read timed out. (read timeout=25)",
-   "em": "2026-11-26T18:50-03:00"
+   "em": "2026-11-27T01:00-03:00"
   },
   "inmet": {
    "ok": true,
    "url": "https://alertas2.inmet.gov.br/",
-   "em": "2026-11-26T18:50-03:00"
+   "em": "2026-11-27T01:00-03:00"
   }
  },
  "atual": {
